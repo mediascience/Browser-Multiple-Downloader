@@ -8,7 +8,6 @@ the "download" attribute in some of its anchor tags.
 This should really be a built-in feature of browsers, since the "download" attribute is
 defined in HTML5.
 
-
 ## Try it Out
 The project is not yet released but build snapshots for select browsers exist:
 
@@ -23,3 +22,9 @@ Report bugs, request features, and request pulls in
 
 View development progress in the
 [tracker](https://www.pivotaltracker.com/s/projects/944648).
+
+## Source
+
+* chrome: chrome extension sources as an unpacked extension directory, build with Chrome "pack extension..."
+* deploy/<browser>: deployment artifacts for browser. Whatever is needed for hosted deployment or that browser's "marketplace."
+* media: source media such as for icons and marketplace banners
