@@ -9,9 +9,7 @@ This should really be a built-in feature of browsers, since the "download" attri
 defined in HTML5.
 
 ## Try it Out
-The project is not yet released but build snapshots for select browsers exist:
-
-- [Chrome beta](https://s3-us-west-1.amazonaws.com/com-msiops-static/multidownload/chrome/multidl-snap.crx) (download then drag onto extensions page)
+The project is in early development but we release [preview snapshots](https://github.com/mediascience/Browser-Multiple-Downloader/wiki/Preview-Snapshots).
 
 ## Community
 Find features, implementation details, and miscellaneous discussion on the
@@ -26,5 +24,5 @@ View development progress in the
 ## Source
 
 * chrome: chrome extension sources as an unpacked extension directory, build with Chrome "pack extension..."
-* deploy/<browser>: deployment artifacts for browser. Whatever is needed for hosted deployment or that browser's "marketplace."
+* deploy/&lt;browser&gt;: deployment artifacts for browser. Whatever is needed for hosted deployment or that browser's "marketplace."
 * media: source media such as for icons and marketplace banners
