@@ -12,7 +12,7 @@ defined in HTML5.
 ## Try it Out
 The project is not yet released but build snapshots for select browsers exist:
 
-- [Chrome beta](https://s3-us-west-1.amazonaws.com/com-msiops-static/multidownload/chrome/multidl-snap.crx)
+- [Chrome beta](https://s3-us-west-1.amazonaws.com/com-msiops-static/multidownload/chrome/multidl-snap.crx) (download then drag onto extensions page)
 
 ## Community
 Find features, implementation details, and miscellaneous discussion on the
