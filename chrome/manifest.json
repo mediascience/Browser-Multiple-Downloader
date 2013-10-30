@@ -1,0 +1,35 @@
+{
+  "name": "HTML5 Multiple Downloader",
+  "icons": {
+      "16": "artwork_e_icon_16.png",
+      "48": "artwork_e_icon_48.png",
+      "128": "artwork_e_icon_128.png"
+  },
+  "description": "Download designated resources from a page",
+  "version": "0.1",
+  "permissions": ["downloads", "<all_urls>"],
+  "manifest_version": 2,
+  "page_action": {
+    "default_icon": {
+      "19": "artwork_icon_19.png",
+      "38": "artwork_icon_38.png"
+     },
+    "default_title": "Download All"
+  },
+  "background": {
+    "scripts": ["event.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}
+
