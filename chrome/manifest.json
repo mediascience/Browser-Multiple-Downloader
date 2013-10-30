@@ -30,6 +30,7 @@
       "run_at": "document_idle",
       "all_frames": false
     }
-  ]
+  ],
+  "update_url": "https://s3-us-west-1.amazonaws.com/com-msiops-static/multidownload/chrome/update.xml"
 }
 
