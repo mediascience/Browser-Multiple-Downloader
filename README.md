@@ -18,11 +18,11 @@ Find features, implementation details, and miscellaneous discussion on the
 Report bugs, request features, and request pulls in
 [issues](https://github.com/mediascience/HTML5-Multiple-Download/issues).
 
-View development progress in the
-[tracker](https://www.pivotaltracker.com/s/projects/944648).
 
 ## Source
 
 * chrome: chrome extension sources as an unpacked extension directory, build with Chrome "pack extension..."
 * deploy/&lt;browser&gt;: deployment artifacts for browser. Whatever is needed for hosted deployment or that browser's "marketplace."
 * media: source media such as for icons and marketplace banners
+
+
