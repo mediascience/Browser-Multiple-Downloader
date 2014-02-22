@@ -1,6 +1,6 @@
 # Multiple Downloader
 
-The multiple downloader is a collection of extensions for different browsers that adds a
+The multiple downloader is a collection of extensions for different browsers adding a
 multiple download feature to the UI of each. The multiple download action is available
 whenever a page explicitly contains downloadable content, as determined by the presence of
 the "download" attribute in some of its anchor tags.
@@ -9,7 +9,7 @@ This should really be a built-in feature of browsers, since the "download" attri
 defined in HTML5.
 
 ## Try it Out
-The project is in early development but we release [preview snapshots](https://github.com/mediascience/Browser-Multiple-Downloader/wiki/Preview-Snapshots).
+The [Chrome version](https://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc) is ready for field testing. 
 
 ## Community
 Find features, implementation details, and miscellaneous discussion on the
