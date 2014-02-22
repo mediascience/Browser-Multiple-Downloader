@@ -1,24 +1,32 @@
 {
-  "name": "HTML5 Multiple Downloader",
+  "name": "Multiple File Downloader",
   "icons": {
-      "16": "artwork_e_icon_16.png",
-      "48": "artwork_e_icon_48.png",
-      "128": "artwork_e_icon_128.png"
+      "16": "images/icon_16.png",
+      "48": "images/icon_48.png",
+      "128": "images/icon_128.png"
   },
-  "description": "Download designated resources from a page",
-  "version": "0.2",
-  "permissions": ["downloads", "<all_urls>"],
+  "description": "Downloads multiple files from any page",
+  "version": "0.6",
+  "permissions": [
+  	"downloads",
+    "storage",
+    "tabs",
+ 	"<all_urls>"
+  ],
   "manifest_version": 2,
   "page_action": {
     "default_icon": {
-      "19": "artwork_icon_19.png",
-      "38": "artwork_icon_38.png"
+      "19": "images/icon_19.png",
+      "38": "images/icon_38.png"
      },
-    "default_title": "Download All"
+    "default_title": "Multiple File Downloader",
+    "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["event.js"],
-    "persistent": false
+    "scripts": [
+      "background.js"
+  	],
+    "persistent": true
   },
   "content_scripts": [
     {
@@ -26,11 +34,10 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["content.js"],
+      "js": ["content_script.js"],
       "run_at": "document_idle",
       "all_frames": false
     }
-  ],
-  "update_url": "https://s3-us-west-1.amazonaws.com/com-msiops-static/multidownload/chrome/update.xml"
-}
+  ]
+ }
 

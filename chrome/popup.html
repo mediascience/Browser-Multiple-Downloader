@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+<title>Multiple File Downloader</title>
+<style type="text/css">
+body {
+	font: 12px helvetica, arial, clean, sans-serif;
+}
+
+h1 {
+	font-size: 16px;
+	margin: 0;
+}
+
+table {
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: block;
+}
+
+
+tr.color0 {
+	background-color: transparent;
+}
+
+tr.color1 {
+	background-color: #e0e0e0;
+}
+
+td {
+	max-width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+label {
+	display: block;
+	padding-left: 15px;
+	text-indent: -15px;
+	margin-bottom: 5px;
+}
+
+.linkCellWidth {
+	max-width: 250px;
+}
+
+.container {
+	display: table;
+	width: 100%
+}
+
+.left {
+	width: 145px;
+	display: table-cell;
+	white-space: nowrap;
+}
+
+.fill {
+	width: auto;
+	display: table-cell;
+}
+
+.right {
+	width: 90px;
+	display: table-cell;
+}
+
+input#txtPath {
+	width: 100%;
+	padding: 0 2px;
+	box-sizing: border-box;
+	border: 2px inset;
+	background-color: transparent;
+}
+
+
+input#txtPath[disabled] {
+	border: none;
+	font-weight: bold;
+	background: transparent;
+}
+
+#btnChange {
+	margin-left: 2px;
+	width: 100%;
+}
+
+.tooltip {
+	display: inline;
+	position: relative;
+}
+
+.tooltip:hover:after {
+	background: #333;
+	background: rgba(0, 0, 0, .8);
+	border-radius: 5px;
+	bottom: 26px;
+	color: #fff;
+	content: "Note: This path will be relative to the\a current 'Downloads' folder.\a \a Examples:\a car images/large\a text_files\a ";
+	left: 20%;
+	padding: 15px 15px;
+	position: absolute;
+	z-index: 98;
+	width: 220px;
+	white-space: pre;
+}
+
+.tooltip:hover:before {
+	border: solid;
+	border-color: #333 transparent;
+	border-width: 6px 6px 0 6px;
+	bottom: 20px;
+	content: "";
+	left: 50%;
+	position: absolute;
+	z-index: 99;
+}
+</style>
+<script src="popup.js"></script>
+</head>
+<body>
+<h1>Downloadable Files</h1>
+<a href="#" id="chkAll">all</a> <a href="#" id="chkNone">none</a>
+<hr>
+<div id="list"></div>
+<hr>
+<div class="container">
+   <div class="left"><button id="btnDownload">Download</button> Destination:</div>
+   <div class="fill"><span title=" " class="tooltip"><input id="txtPath" type="text" placeholder="Enter destination folder name" /></span></div>
+   <div class="right"><button id="btnChange">Use Default</button></div>
+</div> 
+
+</body>
+</html>
