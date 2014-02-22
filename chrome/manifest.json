@@ -7,7 +7,7 @@
       "128": "images/icon_128.png"
   },
   "description": "Downloads multiple files from any page",
-  "version": "0.6",
+  "version": "0.7",
   "permissions": [
   	"downloads",
     "storage",
