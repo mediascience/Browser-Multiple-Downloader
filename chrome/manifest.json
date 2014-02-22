@@ -1,5 +1,6 @@
 {
-  "name": "Multiple File Downloader",
+  "name": "Multiple File Downloader (Beta)",
+  "short_name": "Multifile DL",
   "icons": {
       "16": "images/icon_16.png",
       "48": "images/icon_48.png",
