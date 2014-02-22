@@ -9,7 +9,7 @@ This should really be a built-in feature of browsers, since the "download" attri
 defined in HTML5.
 
 ## Try it Out
-The [Chrome version](https://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc) is ready for field testing. 
+The <a href="http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc" target="_blank">Chrome version</a> is ready for field testing.
 
 ## Community
 Find features, implementation details, and miscellaneous discussion on the
