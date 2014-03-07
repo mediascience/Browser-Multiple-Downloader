@@ -196,12 +196,14 @@ var MSIDownloader={
 				
 				//create checkbox
 				checkbox=document.createElement("checkbox");
+				checkbox.setAttribute("class","downloadItem");
 				checkbox.setAttribute("checked","true");
 				row.appendChild(checkbox);
 				
 				//process the data to use below, and during download process
 				href=MSIDownloader.absolutePath(anchor.getAttribute("href"));
 				download=MSIDownloader.fileName(anchor.getAttribute("download"));
+//				console.log("download:"+download);
 				MSIDownloader.data.push({download:download,href:href});
 				
 				//create download name
@@ -272,7 +274,7 @@ var MSIDownloader={
 		
 		selectUnselect:function() {
 			let checked=this.id=="chkAll";
-			let checkboxes=document.querySelectorAll("checkbox");
+			let checkboxes=document.querySelectorAll("checkbox.downloadItem");
 			let i;
 			for(i=0;i<checkboxes.length;i++) {
 				checkboxes[i].checked=checked;
@@ -300,11 +302,48 @@ var MSIDownloader={
 
 		
 		download:function() {
-			let checkboxes=document.querySelectorAll("checkbox");
-			let i,d,count;
+			let checkboxes=document.querySelectorAll("checkbox.downloadItem");
+			let i,d,fileName,tempName,count,n,j;
 			let filePath=document.getElementById("filePath");
 			let path=filePath.value;
+			let localFile;
+			
+			//check if path exists, and if not, then create the folder
+			localFile=Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+			localFile.initWithPath(path);
+			if(!localFile.exists() || !localFile.isDirectory()) {
+				//read and write permissions to owner and group, read-only for others.
+				localFile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE,0774);
+			} else {
+				console.log("data:"+JSON.stringify(MSIDownloader.data));
+				//folder existed already so check for duplicate filenames and rename any that are found
+				console.log("checkboxes.length:"+checkboxes.length);
+				for(i=0;i<checkboxes.length;i++) {
+					if(checkboxes[i].checked) {
+						//check this file name
+						d=MSIDownloader.data[i];
+//						console.log("i:"+i+" d.download:"+d.download);
+						tempName=fileName=d.download;
+						
+						localFile.initWithPath(OS.Path.join(path,tempName));
+						for(n=1;localFile.exists() && !localFile.isDirectory();n++) {
+							//append a number and see if that file exists
+							j=fileName.lastIndexOf(".");
+							if(j>-1) {
+								tempName=fileName.substring(0,j)+"_"+n+fileName.substring(j);
+							} else {
+								//filenames without an extension just append number to the end of the name
+								tempName=fileName+"_"+n;
+							}
+							localFile.initWithPath(OS.Path.join(path,tempName));
+						}
+						//use the temp name as the file name (may not have changed)
+						d.download=tempName;
+					}
+				}
+			}
 
+			
 			//count total files to be downloaded
 			for(i=count=0;i<checkboxes.length;i++) {
 				if(checkboxes[i].checked) count++;
