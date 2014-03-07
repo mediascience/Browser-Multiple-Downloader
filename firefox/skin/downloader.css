@@ -1,0 +1,67 @@
+#downloader-button {
+  list-style-image: url("chrome://downloader/skin/icon_24.png");
+}
+
+#downloader-button[disabled=true] {
+  list-style-image: url("chrome://downloader/skin/icon_24_disabled.png");
+}
+
+toolbar[iconsize="small"] #downloader-button {
+  list-style-image: url("chrome://downloader/skin/icon_16.png");
+}
+
+toolbar[iconsize="small"] #downloader-button[disabled=true] {
+  list-style-image: url("chrome://downloader/skin/icon_16_disabled.png");
+}
+
+#downloader-panel {
+	font: 12px helvetica, arial, clean, sans-serif;
+	background: #fff;
+	padding: 10px;
+}
+
+.h1 {
+	font-weight: bold;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+}
+
+#chkAll, #chkNone, #btnDownload, #btnChange {
+	margin: 0 4px 0 0;
+	padding: 0;
+}
+
+#btnUseDefault {
+	margin: 0;
+	padding: 0;
+}
+
+hr {
+	margin: 5px 0;
+}
+
+.color0 {
+	background-color: transparent;
+}
+
+.color1 {
+	background-color: #e0e0e0;
+}
+
+checkbox {
+	width: 28px !important;
+	margin: 0 0 0 8px;
+	padding: 0;
+}
+
+row {
+	height: 23px;
+}
+
+row label {
+	margin-left: 0;
+}
+
+
+

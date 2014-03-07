@@ -1,0 +1,6 @@
+content   downloader  content/ contentaccessible=yes
+skin      downloader  classic/1.0 skin/
+locale    downloader  en-US locale/en-US/
+resource  downloader  modules/
+style     chrome://global/content/customizeToolbar.xul chrome://downloader/skin/downloader.css
+overlay   chrome://browser/content/browser.xul chrome://downloader/content/downloader.xul

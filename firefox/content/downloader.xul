@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet type="text/css" href="chrome://global/skin/global.css" ?>
+<?xml-stylesheet type="text/css" href="chrome://downloader/skin/downloader.css" ?>
+
+<!DOCTYPE overlay SYSTEM "chrome://downloader/locale/downloader.dtd">
+
+<overlay id="downloader-overlay" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/x-javascript" src="chrome://downloader/content/downloader.js" />
+
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="downloader-string-bundle"
+			src="chrome://downloader/locale/downloader.properties" />
+	</stringbundleset>
+
+	<commandset>
+		<command id="downloader-cmd-show-popup" oncommand="MSIDownloader.showPopup();" />
+	</commandset>
+
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbarbutton id="downloader-button" class="toolbarbutton-1"
+			label="&downloader-button.label;" tooltiptext="&downloader-button.tooltip;"
+			command="downloader-cmd-show-popup">
+		</toolbarbutton>
+	</toolbarpalette>
+	<popupset id="mainPopupSet">
+		<panel id="downloader-panel">
+			<vbox>
+				<label class="h1" value="&downloader-button.h1.label;" />
+				<hbox>
+					<label id="chkAll" class="text-link" onclick="return;" value="all" />
+					<label id="chkNone" class="text-link" onclick="return;" value="none" />
+					<spacer flex="1" />
+				</hbox>
+				<html:hr />
+				<grid flex="1" id="list">
+					<columns>
+						<column maxwidth="20"/>
+						<column maxwidth="150"/>
+						<column flex="1" maxwidth="250"/>
+						<column maxwidth="150"/>
+					</columns>
+					<rows>
+						<!-- row align="center" class="color0">
+							<checkbox checked="true" />
+							<label crop="end" value="fistpump.jpg"/>
+							<label crop="end" class="text-link" value="http://happygirlapps.com/odesk/fistpump.jpg" />
+							<label crop="end" value="people"/>
+						</row>
+						<row align="center" class="color1">
+							<checkbox checked="true" />
+							<label crop="end" value="this_is_a_long_filename_to_test.png"/>
+							<label crop="end" class="text-link" value="http://happygirlapps.com/odesk/elephant.jpg"/>
+							<label crop="end" value="arrangements"/>
+						</row-->
+					</rows>
+				</grid>
+				<html:hr />
+				<hbox class="container" align="center">
+					<button id="btnDownload" label="&downloader-button.label;"/>
+					<label value="Destination:" />
+					<textbox id="filePath" flex="1" disabled="true"/>
+					<button id="btnChange" label="&downloader-button.change.label;"/>
+					<button id="btnUseDefault" label="&downloader-button.use-default.label;"/>
+				</hbox>
+			</vbox>
+		</panel>
+	</popupset>
+</overlay>
