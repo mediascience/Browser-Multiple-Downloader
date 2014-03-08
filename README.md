@@ -13,7 +13,7 @@ now somewhat standard and defined in HTML5.
 ## Try it Out
 The <a href="http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc" target="_blank">Chrome version</a> is ready for field testing.
 
-The <a href="https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader-alpha/">Firefox version</a> is ready for crash testing.
+The <a href="https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader-alpha/" target="_blank">Firefox version</a> is ready for crash testing.
 
 
 ## Community
