@@ -131,10 +131,11 @@ function populateList() {
 		td=document.createElement("td");
 		tr.appendChild(td);
 		txt=document.createTextNode(d.download);
+		td.className = "download";
 		td.appendChild(txt);
 		
 		//create href link cell
-		td=document.createElement("td");
+		/*td=document.createElement("td");
 		td.setAttribute("class","linkCellWidth");
 		tr.appendChild(td);
 		a=document.createElement("a");
@@ -142,7 +143,7 @@ function populateList() {
 		a.setAttribute("target","_blank");
 		td.appendChild(a);
 		txt=document.createTextNode(d.href);
-		a.appendChild(txt);
+		a.appendChild(txt);*/
 		
 		//create link description cell
 		td=document.createElement("td");
@@ -170,7 +171,7 @@ function download() {
 		if(inputs[i].checked) {
 			//save this file
 			d=data[i];
-			console.log("download:"+JSON.stringify({"url":d.href,"filename":path+d.download,"conflictAction":"uniquify"}));
+			console.log("download:"+JSON.stringify({"filename":path+d.download,"conflictAction":"uniquify"}));
 			chrome.downloads.download({"url":d.href,"filename":path+d.download,"conflictAction":"uniquify"}, function(downloadId) {
 				count--;
 				if(count==0) window.close();
