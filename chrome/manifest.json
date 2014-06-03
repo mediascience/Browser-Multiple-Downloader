@@ -7,7 +7,7 @@
       "128": "images/icon_128.png"
   },
   "description": "Quickly get the downloads and nothing else.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "permissions": [
   	"downloads",
     "storage",
