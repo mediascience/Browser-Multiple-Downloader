@@ -37,9 +37,13 @@ td {
 	padding-right: 4px;
 }
 
+.small_col {
+	padding-left: 10px;
+}
+
 .download {
-	padding-left: 35px;
-	padding-right: 35px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 label {
@@ -58,20 +62,27 @@ label {
 	width: 100%
 }
 
+.bottom_container {
+	clear: both;
+	padding-top: 15px;
+}
+
 .left {
 	width: 145px;
-	display: table-cell;
+	display: block;
 	white-space: nowrap;
 }
 
 .fill {
 	width: auto;
 	display: table-cell;
+	float: left;
 }
 
 .right {
 	width: 90px;
 	display: table-cell;
+	float: right;
 }
 
 input#txtPath {
@@ -139,9 +150,14 @@ input#txtPath[disabled] {
 <div id="list"></div>
 <hr>
 <div class="container">
-   <div class="left"><button id="btnDownload">Download</button> Destination:</div>
-   <div class="fill"><span title=" " class="tooltip"><input id="txtPath" type="text" placeholder="Enter destination folder name" /></span></div>
-   <div class="right"><button id="btnChange">Use Default</button></div>
+	<div class="top_container">
+	   <div class="left">Destination:</div>
+	   <div class="fill"><span title=" " class="tooltip"><input id="txtPath" type="text" placeholder="Enter destination folder name" /></span></div>
+	   <div class="right"><button id="btnChange">Use Default</button></div>
+	</div>
+	<div class="bottom_container">
+   		<button id="btnDownload">Download</button> 
+   	</div>
 </div> 
 
 </body>

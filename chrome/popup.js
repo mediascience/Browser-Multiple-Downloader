@@ -130,9 +130,17 @@ function populateList() {
 		//create download name cell
 		td=document.createElement("td");
 		tr.appendChild(td);
-		txt=document.createTextNode(d.download);
-		td.className = "download";
-		td.appendChild(txt);
+		if (!d.text) {
+			txt=document.createTextNode(d.download);
+			td.className = "download";
+			td.appendChild(txt);
+		} else {
+			txt=document.createTextNode(d.text);
+			td.className = "download";
+			td.appendChild(txt);
+		}
+		
+		
 		
 		//create href link cell
 		/*td=document.createElement("td");
@@ -148,7 +156,8 @@ function populateList() {
 		//create link description cell
 		td=document.createElement("td");
 		tr.appendChild(td);
-		txt=document.createTextNode(d.text);
+		txt=document.createTextNode(" ");
+		td.className = "small_col";
 		td.appendChild(txt);
 	}
 	
