@@ -207,24 +207,39 @@ var MSIDownloader={
 				MSIDownloader.data.push({download:download,href:href});
 				
 				//create download name
-				label=document.createElement("label");
+				/*label=document.createElement("label");
 				label.setAttribute("crop","end");
 				label.setAttribute("value",MSIDownloader.fileName(anchor.getAttribute("download")));
-				row.appendChild(label);
+				row.appendChild(label);*/
+
+				//create download name
+				label=document.createElement("label");
+				label.setAttribute("crop","end");
+				label.setAttribute("class","download");
+				if (!anchor.textContent) {
+					label.setAttribute("value",MSIDownloader.fileName(anchor.getAttribute("download")));
+					row.appendChild(label);
+				} else {
+					label.setAttribute("value",MSIDownloader.fileName(anchor.textContent));
+					row.appendChild(label);
+				}
+		
 				
 				//create href link 
-				label=document.createElement("label");
+				/*label=document.createElement("label");
 				label.setAttribute("crop","end");
 				label.setAttribute("class","text-link");
 				label.setAttribute("value",MSIDownloader.absolutePath(anchor.getAttribute("href")));
 				label.addEventListener("click",MSIDownloader.openInBrowser);
-				row.appendChild(label);
+				row.appendChild(label);*/
 				
 				//create link description cell
-				label=document.createElement("label");
+				/*label=document.createElement("label");
 				label.setAttribute("crop","end");
-				label.setAttribute("value",anchor.textContent);
-				row.appendChild(label);
+				//label.setAttribute("value",anchor.textContent);
+				label.setAttribute("value"," ");
+				label.setAttribute("class", "small_col");
+				row.appendChild(label);*/
 			}
 		},
 		

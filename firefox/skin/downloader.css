@@ -63,5 +63,24 @@ row label {
 	margin-left: 0;
 }
 
+.small_col {
+	padding-left: 10px;
+}
 
+.download {
+	padding-left: 10px;
+	padding-right: 10px;
+}
 
+.bottom_container {
+	clear: both;
+	padding-top: 15px;
+}
+
+#chkAll {
+	padding-right: 10px;
+}
+
+#btnDownload {
+	float: left;
+}

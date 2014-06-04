@@ -37,9 +37,8 @@
 				<grid flex="1" id="list">
 					<columns>
 						<column maxwidth="20"/>
-						<column maxwidth="150"/>
-						<column flex="1" maxwidth="250"/>
-						<column maxwidth="150"/>
+						<column maxwidth="250"/>
+						
 					</columns>
 					<rows>
 						<!-- row align="center" class="color0">
@@ -58,11 +57,18 @@
 				</grid>
 				<html:hr />
 				<hbox class="container" align="center">
-					<button id="btnDownload" label="&downloader-button.label;"/>
-					<label value="Destination:" />
-					<textbox id="filePath" flex="1" disabled="true"/>
-					<button id="btnChange" label="&downloader-button.change.label;"/>
-					<button id="btnUseDefault" label="&downloader-button.use-default.label;"/>
+					<hbox class="top_container" align="center">
+						
+						<label value="Destination:" />
+						<html:br />
+						<textbox id="filePath" flex="1" disabled="true"/>
+						<button id="btnChange" label="&downloader-button.change.label;"/>
+						<button id="btnUseDefault" label="&downloader-button.use-default.label;"/>
+					</hbox>
+					<html:br />
+					<hbox class="bottom_container" align="center">
+						<button id="btnDownload" label="&downloader-button.label;"/>
+					</hbox>
 				</hbox>
 			</vbox>
 		</panel>
