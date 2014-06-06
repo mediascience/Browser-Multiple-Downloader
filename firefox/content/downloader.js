@@ -108,7 +108,7 @@ var MSIDownloader={
 			chkNone.addEventListener("click",MSIDownloader.selectUnselect,false);
 			
 			//setup listener from injected code
-			console.log("setting up listen_request");
+			//console.log("setting up listen_request");
 			MSIDownloader.listen_request(MSIDownloader.callback);
 		},
 
@@ -125,11 +125,11 @@ var MSIDownloader={
 			let filePath=document.getElementById("filePath");
 			if(!MSIDownloader.prefService.prefHasUserValue(MSIDownloader.prefPath)) {
 				//no path stored so just use downloads folder
-				console.log("no path");
+				//console.log("no path");
 				filePath.value=MSIDownloader.downloadPath();
 			} else {
 				//use previous path
-				console.log("path:"+MSIDownloader.prefService.getCharPref(MSIDownloader.prefPath));
+				//console.log("path:"+MSIDownloader.prefService.getCharPref(MSIDownloader.prefPath));
 				filePath.value=MSIDownloader.prefService.getCharPref(MSIDownloader.prefPath);
 			}
 			
@@ -151,7 +151,7 @@ var MSIDownloader={
 		},
 		
 		showPopup:function() {
-			console.log("showPopup()");
+			//console.log("showPopup()");
 			MSIDownloader.anchors=window.content.document.querySelectorAll("a[href][download]");
 			if(MSIDownloader.anchors.length>0) {
 				//populate the list
@@ -253,18 +253,18 @@ var MSIDownloader={
 		},
 		
 		pageLoaded:function(event) {
-			console.log("page loaded!");
+			//console.log("page loaded!");
 			MSIDownloader.checkForAnchors();
 			
 			//inject the content script to listen for anchor changes
-			console.log("injecting javascript");
+			//console.log("injecting javascript");
 			MSIDownloader.injectJavascript();
 
 		},
 		
 		tabSelected:function(event) {
 			let href=window.content.document.location.href;
-			console.log("tab selected! href:"+href);
+			//console.log("tab selected! href:"+href);
 			
 			MSIDownloader.checkForAnchors();
 			//if content_script was already injected, this will just restart the observing
@@ -279,7 +279,7 @@ var MSIDownloader={
 
 				let href=contentDoc.location.href;
 				href=href.toLowerCase();
-				console.log("tab was deselected! href:"+href);
+				//console.log("tab was deselected! href:"+href);
 				
 				let jso=contentDoc.defaultView.wrappedJSObject;
 				jso.MSIDownloader.stopObserving();
@@ -330,9 +330,9 @@ var MSIDownloader={
 				//read and write permissions to owner and group, read-only for others.
 				localFile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE,0774);
 			} else {
-				console.log("data:"+JSON.stringify(MSIDownloader.data));
+				//console.log("data:"+JSON.stringify(MSIDownloader.data));
 				//folder existed already so check for duplicate filenames and rename any that are found
-				console.log("checkboxes.length:"+checkboxes.length);
+				//console.log("checkboxes.length:"+checkboxes.length);
 				for(i=0;i<checkboxes.length;i++) {
 					if(checkboxes[i].checked) {
 						//check this file name
@@ -380,7 +380,7 @@ var MSIDownloader={
 						if(checkboxes[i].checked) {
 
 							d=MSIDownloader.data[i];
-							console.log("source:"+d.href+"  target:"+OS.Path.join(path,d.download));
+							//console.log("source:"+d.href+"  target:"+OS.Path.join(path,d.download));
 
 							let download = yield Downloads.createDownload({
 								source: d.href,
@@ -467,23 +467,23 @@ var MSIDownloader={
 				script.type="text/javascript";
 				script.setAttribute("src","chrome://downloader/content/content_script.js");
 				top.window.content.document.getElementsByTagName("head")[0].appendChild(script);
-				console.log("wait for injection 0");
+				//console.log("wait for injection 0");
 				setTimeout(function() {MSIDownloader.waitForInjection(jso,1);},100);
 			} else {
-				console.log("injected already");
+				//console.log("injected already");
 //				already injected so set mode immediately
 				jso.MSIDownloader.init();
 			}
 		},
 
 		waitForInjection:function(jso,count) {
-			console.log("wait for injection:"+count);
+			//console.log("wait for injection:"+count);
 			if(count>10) return;
 			if(!jso.MSIDownloader) {
-				console.log("wait for injection");
+				//console.log("wait for injection");
 				setTimeout(function() {MSIDownloader.waitForInjection(jso,count+1);},100);
 			} else {
-				console.log("injection ready");
+				//console.log("injection ready");
 				jso.MSIDownloader.init();
 			}
 		},
@@ -506,7 +506,7 @@ var MSIDownloader={
 		
 		callback:function(request,sender,callback) {
 			if(request.enableDownloader!=null) {
-				console.log("request.enableDownloader:"+request.enableDownloader);
+				//console.log("request.enableDownloader:"+request.enableDownloader);
 				MSIDownloader.downloaderButton.disabled=!request.enableDownloader;
 			}
 
