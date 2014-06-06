@@ -4,14 +4,15 @@
   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:name>Multiple File Downloader (Alpha)</em:name>
+    <em:name>Multiple File Downloader</em:name>
     <em:description>Downloads multiple files from any page</em:description>
     <em:creator>MSI Developers</em:creator>
     <em:developer>Ray Engelking</em:developer>
+    <em:developer>Tayo Oredola</em:developer>
     <em:contributor>Greg Wiley &lt;aztec.rex@jammm.com&gt;</em:contributor>
     <em:id>{3f1d5914-65d6-4344-985b-2c6c28a40398}</em:id>
-    <em:version>0.2</em:version>
-    <em:homepageURL>http://www.mediascienceinternational.com</em:homepageURL>
+    <em:version>1.1.0</em:version>
+    <em:homepageURL>https://github.com/mediascience/Browser-Multiple-Downloader/wiki</em:homepageURL>
     <em:type>2</em:type>
 	<em:iconURL>chrome://downloader/skin/icon_48.png</em:iconURL>
 	<em:icon64URL>chrome://downloader/skin/icon_64.png</em:icon64URL>
@@ -22,7 +23,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
         <em:minVersion>25.0</em:minVersion>
-        <em:maxVersion>27.*</em:maxVersion>
+        <em:maxVersion>32.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
