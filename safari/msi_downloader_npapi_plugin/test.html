@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+ File: test.html
+ Version: 1.0
+
+ Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
+ Inc. ("Apple") in consideration of your agreement to the following
+ terms, and your use, installation, modification or redistribution of
+ this Apple software constitutes acceptance of these terms.  If you do
+ not agree with these terms, please do not use, install, modify or
+ redistribute this Apple software.
+
+ In consideration of your agreement to abide by the following terms, and
+ subject to these terms, Apple grants you a personal, non-exclusive
+ license, under Apple's copyrights in this original Apple software (the
+ "Apple Software"), to use, reproduce, modify and redistribute the Apple
+ Software, with or without modifications, in source and/or binary forms;
+ provided that if you redistribute the Apple Software in its entirety and
+ without modifications, you must retain this notice and the following
+ text and disclaimers in all such redistributions of the Apple Software.
+ Neither the name, trademarks, service marks or logos of Apple Inc. may
+ be used to endorse or promote products derived from the Apple Software
+ without specific prior written permission from Apple.  Except as
+ expressly stated in this notice, no other rights or licenses, express or
+ implied, are granted by Apple herein, including but not limited to any
+ patent rights that may be infringed by your derivative works or by other
+ works in which the Apple Software may be incorporated.
+
+ The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
+ MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
+ OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
+
+ IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
+ OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION,
+ MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED
+ AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
+ STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+
+ Copyright (C) 2011 Apple Inc. All Rights Reserved.
+
+-->
+<html>
+<head>
+<title>Netscape Core Animation Movie Plug-In</title>
+<script>
+    var saveDir="/Users/rengelking/Documents";
+    
+    function openFolder(dir) {
+        var plugin=document.getElementById('plugin');
+        
+        if(dir) {
+            console.log("openFolder "+dir);
+            saveDir=plugin.folder(dir);
+        } else {
+            console.log("openFolder()");
+            saveDir=plugin.folder();
+        }
+         console.log("result:"+saveDir);
+    }
+
+function download(baseDir,fileName,url) {
+    var plugin=document.getElementById('plugin');
+    var result;
+    result=plugin.download(baseDir,fileName,url);
+    console.log("result:"+result);
+}
+
+function newPlugin() {
+    var embed=document.createElement("embed");
+    embed.setAttribute("id","plugin");
+//    embed.setAttribute("width",848);
+//    embed.setAttribute("height",480);
+    embed.setAttribute("hidden",true);
+    embed.setAttribute("type","application/msi-downloader-plugin");
+    document.body.appendChild(embed);
+}
+
+function defaultFolder() {
+    var plugin=document.getElementById('plugin');
+    var folder=plugin.defaultfolder();
+    
+    console.log("default download folder:"+folder);
+}
+
+</script>
+<style>
+    embed {
+        border: 1px solid blue;
+    }
+</style>
+</head>
+<body>
+<div>
+    <!--embed width="848" height="480" id="plugin" type="application/msi-downloader-plugin"></embed-->
+</div>
+<p>JavaScript controller</p>
+<button onclick="newPlugin()">Create Plugin</button>
+<button onclick="openFolder()">Choose Folder</button>
+<button onclick="openFolder('/Users/rengelking')">Choose Folder default</button>
+<button onclick="download(saveDir,'fistpump.jpg','http://happygirlapps.com/odesk/fistpump.jpg')">Download fistpump.jpg</button>
+<button onclick="download(saveDir,'robot.jpg','http://happygirlapps.com/odesk/robot.jpg')">Download robot.jpg</button>
+<button onclick="download(saveDir,'elephant.jpg','http://happygirlapps.com/odesk/elephant.jpg')">Download elephant.jpg</button>
+<button onclick="download(saveDir,'elephant.jpg','lapps.com/odesk/elephant.jpg')">Bad url</button>
+<button onclick="download(saveDir,'elephant.jpg','http://www.happygirlapps.com/odesk/this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__this_is_a_long_filename__.jpg')">Bad Link</button>
+
+
+<button onclick="defaultFolder()">Get Default Download Folder</button>
+
+
+</body>
+</html>

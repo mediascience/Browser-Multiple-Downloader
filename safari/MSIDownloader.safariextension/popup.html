@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+<title>Multiple File Downloader</title>
+<style type="text/css">
+body {
+	font: 12px helvetica, arial, clean, sans-serif;
+}
+
+h1 {
+	font-size: 16px;
+	margin: 0;
+}
+
+table {
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: block;
+}
+
+
+tr.color0 {
+	background-color: transparent;
+}
+
+tr.color1 {
+	background-color: #e0e0e0;
+}
+
+td {
+	max-width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-left: 4px;
+	padding-right: 4px;
+	vertical-align: text-bottom;
+}
+
+td img {
+	vertical-align: bottom;
+}
+td span {
+	vertical-align: text-bottom;
+}
+
+label {
+	display: block;
+	padding-left: 15px;
+	text-indent: -15px;
+	margin-bottom: 5px;
+}
+
+.linkCellWidth {
+	max-width: 250px;
+}
+
+.textCellWidth {
+	width: 100px !important;
+}
+
+.statusCellWidth {
+	width: 100px !important;
+}
+
+#container {
+	display: table;
+	width: 100%;
+	vertical-align: center;
+}
+
+.left {
+	width: 145px;
+	display: table-cell;
+	white-space: nowrap;
+	text-align: left;
+}
+
+.fill {
+	width: auto;
+	display: table-cell;
+}
+
+.right {
+	width: 90px;
+	display: table-cell;
+	text-align: right;
+}
+
+input#folderPath {
+	width: 100%;
+	padding: 0 2px;
+	box-sizing: border-box;
+	border: 2px inset;
+	background-color: transparent;
+}
+
+#btnChange, #btnUseDefault {
+	width: 86px;
+}
+</style>
+<script src="popup.js"></script>
+</head>
+<body>
+<h1>Downloadable Files</h1>
+<a href="#" id="chkAll">all</a> <a href="#" id="chkNone">none</a>
+<hr>
+<div id="list"></div>
+<hr>
+<div id="container">
+   <div class="left"><button id="btnDownload">Download</button> Destination:</div>
+   <div class="fill"><span><input id="folderPath" type="text" placeholder="Enter destination folder name" readonly="readonly" /></span></div>
+   <div class="right"><button id="btnChange">Change</button></div>
+   <div class="right"><button id="btnUseDefault">Use Default</button></div>
+</div> 
+
+</body>
+</html>
