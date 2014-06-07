@@ -1,11 +1,12 @@
 .project
 .settings/
 build/
+xcuserdata/
 .DS_Store
 *.crx
 *.xpi
 *.pem
 *.zip
 *.pkg
-
+*.safariextz
 
