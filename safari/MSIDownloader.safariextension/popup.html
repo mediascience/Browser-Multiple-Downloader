@@ -3,13 +3,13 @@
 <head>
 <title>Multiple File Downloader</title>
 <style type="text/css">
+
 body {
 	font: 12px helvetica, arial, clean, sans-serif;
 }
 
 h1 {
 	font-size: 16px;
-	margin: 0;
 }
 
 table {
@@ -17,6 +17,10 @@ table {
 	overflow-y: auto;
 	overflow-x: hidden;
 	display: block;
+	width: 100%;
+	position: relative;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 
@@ -29,7 +33,7 @@ tr.color1 {
 }
 
 td {
-	max-width: 100px;
+	max-width: 200px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -52,12 +56,22 @@ label {
 	margin-bottom: 5px;
 }
 
+.small_col {
+	/*padding-left: 10px;*/
+}
+
+.download {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
 .linkCellWidth {
-	max-width: 250px;
+	/*max-width: 250px;*/
 }
 
 .textCellWidth {
-	width: 100px !important;
+	/*width: 100px !important;*/
 }
 
 .statusCellWidth {
@@ -70,9 +84,14 @@ label {
 	vertical-align: center;
 }
 
+.bottom_container {
+	clear: both;
+	padding-top: 10px;
+}
+
 .left {
 	width: 145px;
-	display: table-cell;
+	display: block;
 	white-space: nowrap;
 	text-align: left;
 }
@@ -80,12 +99,14 @@ label {
 .fill {
 	width: auto;
 	display: table-cell;
+	float: left;
 }
 
 .right {
 	width: 90px;
 	display: table-cell;
 	text-align: right;
+	float: right;	
 }
 
 input#folderPath {
@@ -99,6 +120,11 @@ input#folderPath {
 #btnChange, #btnUseDefault {
 	width: 86px;
 }
+
+#chkAll {
+	padding-right: 10px;
+}
+
 </style>
 <script src="popup.js"></script>
 </head>
@@ -109,10 +135,15 @@ input#folderPath {
 <div id="list"></div>
 <hr>
 <div id="container">
-   <div class="left"><button id="btnDownload">Download</button> Destination:</div>
-   <div class="fill"><span><input id="folderPath" type="text" placeholder="Enter destination folder name" readonly="readonly" /></span></div>
-   <div class="right"><button id="btnChange">Change</button></div>
-   <div class="right"><button id="btnUseDefault">Use Default</button></div>
+	<div class="top_container">
+		<div class="left">Destination:</div>
+		<div class="fill"><span><input id="folderPath" type="text" placeholder="Enter destination folder name" readonly="readonly" /></span></div>
+		<div class="right"><button id="btnChange">Change</button></div>
+	   	<div class="right"><button id="btnUseDefault">Use Default</button></div>
+	</div>
+	<div class="bottom_container">
+		<button id="btnDownload">Download</button> 
+	</div>
 </div> 
 
 </body>

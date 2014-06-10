@@ -211,11 +211,18 @@ function populateList() {
 		//create download name cell
 		td=document.createElement("td");
 		tr.appendChild(td);
-		txt=document.createTextNode(d.download);
-		td.appendChild(txt);
+		if (!d.text) {
+			txt=document.createTextNode(d.download);
+			td.className = "download";
+			td.appendChild(txt);
+		} else {
+			txt=document.createTextNode(d.text);
+			td.className = "download";
+			td.appendChild(txt);
+		}
 		
 		//create href link cell
-		td=document.createElement("td");
+		/*td=document.createElement("td");
 		td.setAttribute("class","linkCellWidth");
 		tr.appendChild(td);
 		a=document.createElement("a");
@@ -224,14 +231,16 @@ function populateList() {
 		a.addEventListener("click",openURL,false);
 		td.appendChild(a);
 		txt=document.createTextNode(d.href);
-		a.appendChild(txt);
+		a.appendChild(txt);*/
 		
 		//create link description cell
-		td=document.createElement("td");
-		td.setAttribute("class","textCellWidth");
+		/*td=document.createElement("td");
+		//td.setAttribute("class","textCellWidth");
 		tr.appendChild(td);
-		txt=document.createTextNode(d.text);
-		td.appendChild(txt);
+		//txt=document.createTextNode(d.text);
+		txt=document.createTextNode(" ");
+		td.className = "small_col";
+		td.appendChild(txt);*/
 		
 		//create status cell
 		td=document.createElement("td");
