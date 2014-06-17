@@ -18,6 +18,16 @@ function init() {
 				//update the most recent tab to sender tab
 				activeTabId=sender.tab.id;
 			}
+			else if(request.downloadInitiate){
+				// passing in the selected downloads
+				if(request.selected && request.selected.length)
+					downloadInitiate(request.selected);
+			}
+			else if(request.executeScript){
+				// passing in the script to be executed
+				if(request.script)
+					executeScript(request.script);
+			}
 		}
 	});
 	
@@ -29,6 +39,12 @@ function init() {
 	//listen for active window changes
 	chrome.windows.onFocusChanged.addListener(function(windowId) {
 		listenOnActiveTab();
+	});
+}
+
+function executeScript(script){
+	chrome.tabs.executeScript({
+	    code: script
 	});
 }
 
@@ -58,6 +74,18 @@ function listenOnActiveTab() {
 			chrome.tabs.sendMessage(activeTabId,{observeDownloads:"start"});
 		}
 	});
+}
+
+function downloadInitiate(data){
+	if(data){
+		for(i=0;i<data.length;i++) {
+			//save this file
+			d=data[i];
+			chrome.downloads.download({"url":d.href,"filename":d.download,"conflictAction":"uniquify"}, function(downloadId) {
+		
+			});
+		}
+	}
 }
 
 init();

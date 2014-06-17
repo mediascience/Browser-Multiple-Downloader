@@ -1,5 +1,14 @@
 {
   "name": "Multiple File Downloader",
+  "commands": {
+    "_execute_page_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+D",
+        "windows": "Alt+Shift+D",
+        "mac": "Alt+Shift+D"
+      }
+    }
+  },
   "short_name": "Multifile DL",
   "icons": {
       "16": "images/icon_16.png",

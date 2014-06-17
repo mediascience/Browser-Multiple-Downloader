@@ -1,6 +1,6 @@
 # Multiple Downloader
 
-The multiplf-file download is a collection of extensions that use the new *download*
+The multiple-file download is a collection of extensions that use the new *download*
 attribute in HTML5 to offer multiple-file downloading. Simple as that.
 
 This is not meant to be a "download accelerator," "download manager" or anything like

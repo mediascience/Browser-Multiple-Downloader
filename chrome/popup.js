@@ -46,6 +46,7 @@ function init() {
 	getFiles(function() {
 		populateList();
 	});
+	
 }
 
 function checkPath() {
