@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>MSI TEST MFD PAGE</title>
+	<style>
+
+	body {
+		width: 500px;
+		color: #000;
+		margin: 0 auto;
+		font: 1em/150% Arial, Helvetica, sans-serif;
+	}
+	
+	#container {
+		overflow: hidden;
+		position: relative;
+	} 
+
+	h1 {
+		font-size: 24px;
+		font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+		margin-top: 50px;
+	}
+
+	h2 {
+		font-size: 18px;
+		font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+		border-bottom: 1px solid  #000;
+		margin-bottom: 20px;
+	}
+
+	.media-items {
+		padding: 0 0 0 20px;
+		background: #f0f3f3;
+		border-radius: 6px;
+		
+		margin: 10px 0;
+	}
+
+	.filename {
+		float: left;
+	}
+
+	.filesize {
+		float: right;	
+	}
+
+	.clear {
+		clear: both;
+		border-bottom: 1px solid #c3d4d5;
+	}
+
+	.media {
+		line-height: 32px;
+		font-size: 14px;
+	}
+
+	</style>
+
+</head>
+<body>
+	<div id="container">
+		<h1>MSI TEST LANDING PAGE</h1>
+		<h2>Select Media File(s)</h2>
+		<div class="media">
+			<div class="media-items">
+				<div class="filename items">
+					<input type="checkbox" name="sometest" />
+					<a href="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/music/Sleep Away.mp3"  download="01-Sleep Away.mp3">01-Sleep Away.mp3</a>
+				</div>
+				<div class="filesize items">11.8MB</div>
+			</div>
+			<div class="clear"></div>
+			<div class="media-items">
+				<div class="filename items">
+					<input type="checkbox" name="sometest" />
+					<a href="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/music/Kalimba.mp3"  download="02-Kalimba.mp3">02-Kalimba.mp3</a>
+				</div>
+				<div class="filesize items">2.6MB</div>
+			</div>
+			<div class="clear"></div>
+			<div class="media-items">
+				<div class="filename items">
+					<input type="checkbox" name="sometest" />
+					<a href="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/music/Maid with the Flaxen Hair.mp3"  download="03-Maid with the Flaxen Hair.mp3">03-Maid with the Flaxen Hair.mp3</a>
+				</div>
+				<div class="filesize items">14.1MB</div>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+		
+	</div>
+	<br/>
+	<div id="downloadSection">
+			<input type="submit" id="testbutton" onclick="testButtonClick();" value ="Download"></input>
+	<div> 
+	<div id="watchSection">
+			<input type="submit" id="testWatchbutton" onclick="addlink();" value ="Add Link"></input>
+	<div> 
+					
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/MFD.js"></script>
+	<script>
+
+	var downloader;
+
+	$(document).ready(function() {
+
+		$("input[type='checkbox']").change(function() {
+
+			if (this.checked) {
+				//alert('checked');
+				$(this).siblings('a').addClass("active");
+			}
+
+		});
+		mfd.attach(function(result) {
+			downloader = result.downloader;
+			downloader.watch(function(array) {
+				alert("We found " + array.length + " anchor tags on this page")
+			});
+
+		});
+
+	});
+
+	function testButtonClick() {
+		downloadFiles();
+	}
+
+	function downloadFiles() {
+		downloader.initiate($('a.active'));
+
+	}
+
+
+	function addlink() {
+		var link = document.createElement("a");
+		link.setAttribute("href", "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/music/Kalimba.mp3");
+		link.setAttribute("download", "04_Kalimba");
+		if (document.body != null) {
+			document.body.appendChild(link);
+		}
+	}
+	</script>
+
+	
+	
+</body>
+</html>
+
