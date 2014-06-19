@@ -1,0 +1,69 @@
+<html>
+<body>
+Test MultipleFileDownloaderJS API
+</body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/MFD.js"></script>
+<script>
+	
+	if(confirm("Please install the appropriate extension for your browser before running this test. This test will download a test file on to your Downloads folder. Click OK to proceed, or cancel to stop the test.")){
+
+		function assertEquals(val1, val2, msg){
+			console.log(msg + ": " + ((val1 === val2) ? "PASSED" : "FAILED"));
+		}
+
+		function assertTrue(boolVal, msg){
+			console.log(msg + ": " + ((boolVal) ? "PASSED" : "FAILED"));
+		}
+
+		// test attach
+		mfd.attach(function(result){
+			if (navigator.userAgent.indexOf("MSIE") > 0) {
+				assertTrue(result != undefined, "mfd.attach returns a result object");
+				assertEquals(result.status, "UNAVAILABLE", "MultipleFileDownloaderJS for IE unavailable");
+				assertEquals(result.downloader, undefined, "Browser extension for IE unavailable");
+			} 
+			else if (navigator.userAgent.indexOf("Chrome") > 0) {
+				assertTrue(result != undefined, "mfd.attach returns a result object");
+				assertEquals(result.status, "OK", "MultipleFileDownloaderJS for Chrome available");
+				assertTrue(result.downloader != undefined, "Browser extension for Chrome available");
+
+				var downloader = result.downloader;
+				
+				if(downloader){
+					// test watch
+					downloader.watch(function(elements){
+						assertTrue(elements.length == 1, "mfd.watch has detected one new link");
+					});
+
+					// trigger watch event by posting new link
+					var link = document.createElement("a");
+					link.setAttribute("href", "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/media/Anchors_Aweigh.mp3");
+					link.setAttribute("download", "02_Anchors Aweigh");
+					if(document.body != null){ document.body.appendChild(link); }
+
+					// test download
+					downloader.initiate($("a[href][download]"));
+				}
+			} 
+			else if (navigator.userAgent.indexOf("Firefox") > 0) {
+				assertTrue(result != undefined, "mfd.attach returns a result object");
+				assertEquals(result.status, "UNAVAILABLE", "MultipleFileDownloaderJS for Firefox unavailable");
+				assertEquals(result.downloader, undefined, "Browser extension for Firefox unavailable");
+			} 
+			else if (navigator.userAgent.indexOf("Safari") > 0) {
+				assertTrue(result != undefined, "mfd.attach returns a result object");
+				assertEquals(result.status, "UNAVAILABLE", "MultipleFileDownloaderJS for Safari unavailable");
+				assertEquals(result.downloader, undefined, "Browser extension for Safari unavailable");
+			} 
+			else{
+				assertTrue(result != undefined, "mfd.attach returns a result object");
+				assertEquals(result.status, "UNAVAILABLE", "MultipleFileDownloaderJS for Unsupported Browser unavailable");
+				assertEquals(result.downloader, undefined, "Browser extension for Unsupported Browser unavailable");
+			}
+
+		});
+	}
+
+</script>
+</html>

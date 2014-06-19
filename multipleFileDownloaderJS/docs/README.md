@@ -1,0 +1,44 @@
+# MultipleFileDownloaderJS
+
+MultipleFileDownloaderJS is a library that interfaces with our multiple-file download extensions. It provides the following API:
+
+1. Attach to downloader extension
+
+	var downloader;
+	mfd.attach(function (result) {
+	    if (result.status === “OK”) {
+	      // attached to extension successfully
+	      var downloader = result.downloader;
+	    } else if (result.status === “AVAILABLE”) {
+	      // extension not installed, but available for download
+	      showAddonLocation(result.addonUrl);
+	    } else if (result.status === “UNAVAILABLE”) {
+	      // extension not installed and not available for download
+	      noDownloader();
+	    }
+	});
+
+2. Initiate download
+	
+	// pass in a collection of downloadable anchors
+	downloader.initiate(anchorElements);
+
+3. Detect Downloadable Content
+
+	downloader.watch(function (anchorElements) {
+	    if (anchorElements.length > 1) {
+	      showDownloaderButton();
+	    } else {
+	      hideDownloaderButton();
+	    }
+	});
+
+
+## Community
+Find features, implementation details, and miscellaneous discussion on the
+[wiki](https://github.com/mediascience/HTML5-Multiple-Download/wiki).
+
+Report bugs, request features, and request pulls in
+[issues](https://github.com/mediascience/HTML5-Multiple-Download/issues).
+
+
