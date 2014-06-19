@@ -36,14 +36,17 @@ Test MultipleFileDownloaderJS API
 						assertTrue(elements.length == 1, "mfd.watch has detected one new link");
 					});
 
-					// trigger watch event by posting new link
-					var link = document.createElement("a");
-					link.setAttribute("href", "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/media/Anchors_Aweigh.mp3");
-					link.setAttribute("download", "02_Anchors Aweigh");
-					if(document.body != null){ document.body.appendChild(link); }
+					setTimeout(function(){
+						// trigger watch event by posting new link
+						var link = document.createElement("a");
+						link.setAttribute("href", "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/media/Anchors_Aweigh.mp3");
+						link.setAttribute("download", "02_Anchors Aweigh");
+						if(document.body != null){ document.body.appendChild(link); }
 
-					// test download
-					downloader.initiate($("a[href][download]"));
+						// test download
+						downloader.initiate($("a[href][download]"));
+					}, 10);
+					
 				}
 			} 
 			else if (navigator.userAgent.indexOf("Firefox") > 0) {
