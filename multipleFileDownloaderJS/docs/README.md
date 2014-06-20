@@ -20,8 +20,8 @@ MultipleFileDownloaderJS is a library that interfaces with our multiple-file dow
 
 2. Initiate download
 	
-	// pass in a collection of downloadable anchors
-	downloader.initiate(anchorElements);
+	// pass in a collection of downloadable anchors and an optional path (relative to the default Downloads folder)
+	downloader.initiate(anchorElements, path);
 
 3. Detect Downloadable Content
 

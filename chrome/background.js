@@ -21,7 +21,7 @@ function init() {
 			else if(request.downloadInitiate){
 				// passing in the selected downloads
 				if(request.selected && request.selected.length)
-					downloadInitiate(request.selected);
+					downloadInitiate(request.selected, request.path);
 			}
 			else if(request.executeScript){
 				// passing in the script to be executed
@@ -76,12 +76,19 @@ function listenOnActiveTab() {
 	});
 }
 
-function downloadInitiate(data){
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+function downloadInitiate(data, path){
 	if(data){
+		//add the slash to the end of the path if it exists
+		path = (path == undefined ? "" : (path.endsWith('/') ? path : path + "/"));
+
 		for(i=0;i<data.length;i++) {
 			//save this file
 			d=data[i];
-			chrome.downloads.download({"url":d.href,"filename":d.download,"conflictAction":"uniquify"}, function(downloadId) {
+			chrome.downloads.download({"url":d.href,"filename":path+d.download,"conflictAction":"uniquify"}, function(downloadId) {
 		
 			});
 		}

@@ -33,9 +33,10 @@ var mfd = function() {
 		var functArray = [];
 		var anchorTagCount = getAnchorTags().length;
 
-		// this will initiage to download where objAry will be array of
+		// this will initiate to download where objAry will be array of
 		// of anchor tags which user want to download
-		var initiate = function(objAry) {
+		// path is optional and will be relative to the default Downloads folder
+		var initiate = function(objAry, path) {
 
 			var errMsg = "initiate() expects collection of anchor elements";
 
@@ -50,6 +51,10 @@ var mfd = function() {
 			}
 			var newdiv = document.createElement('div');
 			newdiv.setAttribute('id', 'mfd-downloader-initiate-section');
+
+			if(path){
+				newdiv.setAttribute("mfd-downloader-path", path);
+			}
 
 			newdiv.style.position = "absolute";
 			newdiv.style.left = 0;
@@ -81,7 +86,6 @@ var mfd = function() {
 				var newinpt = document.createElement('input');
 				newinpt.setAttribute('type', 'hidden');
 				newinpt.setAttribute('id', 'mfd-downloader-watch-id');
-				//newinpt.setAttribute('onchange', 'updateWatchResult()');
 				newinpt.addEventListener('change', updateWatchResult, false);
 
 				document.body.appendChild(newinpt);
@@ -158,7 +162,6 @@ var mfd = function() {
 		var newinpt = document.createElement('input');
 		newinpt.setAttribute('type', 'hidden');
 		newinpt.setAttribute('id', 'mfd-downloader-detect-extension-id');
-		//newinpt.setAttribute('onchange', 'checkForExtension("true")');
 		newinpt.addEventListener('change', function() {
 			checkForExtension(true)
 		}, false);

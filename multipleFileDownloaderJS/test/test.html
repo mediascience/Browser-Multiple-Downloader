@@ -44,7 +44,7 @@ Test MultipleFileDownloaderJS API
 						if(document.body != null){ document.body.appendChild(link); }
 
 						// test download
-						downloader.initiate($("a[href][download]"));
+						downloader.initiate($("a[href][download]"), "testFolder");
 					}, 10);
 					
 				}

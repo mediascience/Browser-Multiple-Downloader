@@ -72,7 +72,6 @@ function listenForDownloadInitiate(){
 	
 	// presence of download tag will indicate a call to downloader initiate
 	if(downloaderInitiateTag){
-
 		var selected = [];
 
 		var downloaderSelectTags = document.querySelectorAll("input[mfd-downloader-select-href][mfd-downloader-select-download]");
@@ -89,9 +88,11 @@ function listenForDownloadInitiate(){
 					"download":fileName(selectTag.getAttribute("mfd-downloader-select-download"))
 				});
 			}
+			
+			var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
+			chrome.runtime.sendMessage({downloadInitiate: true, selected: selected, path: path});
 		}
 
-		chrome.runtime.sendMessage({downloadInitiate: true, selected: selected});
 		downloaderInitiateTag.remove();
 
 		// return true to signal that we added a "download-initiate" tag
