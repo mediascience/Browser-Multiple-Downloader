@@ -9,11 +9,11 @@ var mfd = function() {
 
 		setTimeout(function() {
 			if (browser == 'Chrome') {
-				detectChromePlugin(function(restulStatus) {
-					if (restulStatus.status == 'OK') {
+				detectChromePlugin(function(resultStatus) {
+					if (resultStatus.status == 'OK') {
 						result.status = 'OK';
 						result.downloader = getChromeDownloader();
-					} else if (restulStatus.status == 'NOT_INSTALLED') {
+					} else if (resultStatus.status == 'NOT_INSTALLED') {
 						result.status = 'AVAILABLE';
 						result.addonUrl = "http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc";
 					} else {
@@ -21,7 +21,22 @@ var mfd = function() {
 					}
 					resultFunc(result);
 				});
-			} else {
+			}
+			else if (browser == 'Firefox') {
+				detectFirefoxPlugin(function(resultStatus) {
+					if (resultStatus.status == 'OK') {
+						result.status = 'OK';
+						result.downloader = getFirefoxDownloader();
+					} else if (resultStatus.status == 'NOT_INSTALLED') {
+						result.status = 'AVAILABLE';
+						result.addonUrl = "https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader/";
+					} else {
+						result.status = 'UNAVAILABLE';
+					}
+					resultFunc(result);
+				});
+			}
+			else {
 				result.status = 'UNAVAILABLE';
 				resultFunc(result);
 			}
@@ -92,39 +107,75 @@ var mfd = function() {
 			}
 		}
 
-		// get executed when content_script triggers onchange event
-		// and this returns list of anchor tags into a funtion
-		function updateWatchResult() {
+		return {
+			initiate: initiate,
+			watch: watch,
+			getAnchorTags: getAnchorTags
+		};
 
-			var currentAnchorTagCount = getAnchorTags().length;
-			if (currentAnchorTagCount === anchorTagCount)
+	}
+
+	function getFirefoxDownloader() {
+		var functArray = [];
+		var anchorTagCount = getAnchorTags().length;
+
+		// this will initiate to download where objAry will be array of
+		// of anchor tags which user want to download
+		// path is optional and will be relative to the default Downloads folder
+		var initiate = function(objAry, path) {
+
+			var errMsg = "initiate() expects collection of anchor elements";
+
+			if (!objAry.length) {
 				return;
-			else
-				anchorTagCount = currentAnchorTagCount;
-
-			var elementAry = [];
-			elementAry = getAnchorTags();
-
-			for (var i in functArray) {
-				try {
-					if (typeof(functArray[i] == "function"))
-						functArray[i](elementAry);
-				} catch (err) {}
 			}
+
+			var divtag = document.getElementById("mfd-downloader-initiate-section");
+
+			if (divtag != null) {
+				divtag.remove();
+			}
+			var newdiv = document.createElement('div');
+			newdiv.setAttribute('id', 'mfd-downloader-initiate-section');
+
+			if(path){
+				newdiv.setAttribute("mfd-downloader-path", path);
+			}
+
+			newdiv.style.position = "absolute";
+			newdiv.style.left = 0;
+			newdiv.style.top = 0;
+
+			for (var i = 0; i < objAry.length; i++) {
+				if (objAry[i].getAttribute) {
+					var newinpt = document.createElement('input');
+					newinpt.setAttribute('type', 'hidden');
+					newinpt.setAttribute('mfd-downloader-select-href', objAry[i].getAttribute('href'));
+					newinpt.setAttribute('mfd-downloader-select-download', objAry[i].getAttribute('download'));
+					newdiv.appendChild(newinpt);
+				} else
+					throw errMsg;
+			}
+			document.body.appendChild(newdiv);
 		}
 
-		// gets all anchor tags and prepare array
-		function getAnchorTags() {
+		// this will insert watch hidden tag in dom if user wish to watch and 
+		// will return array of all elements those are anchor tags with href and download
+		var watch = function(paramFunc) {
 
-			var ary = [];
+			functArray.push(paramFunc);
 
-			var aTaglist = document.getElementsByTagName("a");
+			var inputTag = document.getElementById("mfd-downloader-watch-id");
 
-			for (var i = 0; i < aTaglist.length; i++) {
-				if (aTaglist[i].getAttribute("href") && aTaglist[i].getAttribute("download"))
-					ary.push(aTaglist[i]);
+			if (inputTag == null) {
+
+				var newinpt = document.createElement('input');
+				newinpt.setAttribute('type', 'hidden');
+				newinpt.setAttribute('id', 'mfd-downloader-watch-id');
+				newinpt.addEventListener('change', updateWatchResult, false);
+
+				document.body.appendChild(newinpt);
 			}
-			return ary;
 		}
 
 		return {
@@ -133,6 +184,41 @@ var mfd = function() {
 			getAnchorTags: getAnchorTags
 		};
 
+	}
+
+	// get executed when content_script triggers onchange event
+	// and this returns list of anchor tags into a funtion
+	function updateWatchResult() {
+
+		var currentAnchorTagCount = getAnchorTags().length;
+		if (currentAnchorTagCount === anchorTagCount)
+			return;
+		else
+			anchorTagCount = currentAnchorTagCount;
+
+		var elementAry = [];
+		elementAry = getAnchorTags();
+
+		for (var i in functArray) {
+			try {
+				if (typeof(functArray[i] == "function"))
+					functArray[i](elementAry);
+			} catch (err) {}
+		}
+	}
+
+	// gets all anchor tags and prepare array
+	function getAnchorTags() {
+
+		var ary = [];
+
+		var aTaglist = document.getElementsByTagName("a");
+
+		for (var i = 0; i < aTaglist.length; i++) {
+			if (aTaglist[i].getAttribute("href") && aTaglist[i].getAttribute("download"))
+				ary.push(aTaglist[i]);
+		}
+		return ary;
 	}
 
 	function detectBrowser() {
@@ -152,6 +238,26 @@ var mfd = function() {
 	}
 
 	function detectChromePlugin(waitFunc) {
+
+		var inputTag = document.getElementById("mfd-downloader-detect-extension-id");
+
+		if (inputTag != null) {
+			inputTag.remove();
+		}
+
+		var newinpt = document.createElement('input');
+		newinpt.setAttribute('type', 'hidden');
+		newinpt.setAttribute('id', 'mfd-downloader-detect-extension-id');
+		newinpt.addEventListener('change', function() {
+			checkForExtension(true)
+		}, false);
+
+		document.body.appendChild(newinpt);
+
+		waitForExtension(waitFunc);
+	}
+
+	function detectFirefoxPlugin(waitFunc) {
 
 		var inputTag = document.getElementById("mfd-downloader-detect-extension-id");
 
