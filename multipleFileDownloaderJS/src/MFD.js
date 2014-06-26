@@ -1,52 +1,74 @@
 var mfd = function() {
 
 	var extensionDetected = false;
-	var incmt = 0;
+	var anchorTagCount;
+	var functArray = [];
+	var mfdResult = {};
 
 	var attach = function(resultFunc) {
-		var result = {};
+
 		var browser = detectBrowser();
 
-		setTimeout(function() {
-			if (browser == 'Chrome') {
-				detectChromePlugin(function(resultStatus) {
-					if (resultStatus.status == 'OK') {
-						result.status = 'OK';
-						result.downloader = getChromeDownloader();
-					} else if (resultStatus.status == 'NOT_INSTALLED') {
-						result.status = 'AVAILABLE';
-						result.addonUrl = "http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc";
-					} else {
-						result.status = 'UNAVAILABLE';
-					}
-					resultFunc(result);
-				});
-			}
-			else if (browser == 'Firefox') {
-				detectFirefoxPlugin(function(resultStatus) {
-					if (resultStatus.status == 'OK') {
-						result.status = 'OK';
-						result.downloader = getFirefoxDownloader();
-					} else if (resultStatus.status == 'NOT_INSTALLED') {
-						result.status = 'AVAILABLE';
-						result.addonUrl = "https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader/";
-					} else {
-						result.status = 'UNAVAILABLE';
-					}
-					resultFunc(result);
-				});
-			}
-			else {
-				result.status = 'UNAVAILABLE';
-				resultFunc(result);
-			}
-		}, 10);
 
+		if (browser == 'Chrome') {
+			connectToPlugin(resultFunc, detectChromePlugin, getChromeDownloader, s_chrome_addonUrl);
+		} else if (browser == 'Firefox') {
+			connectToPlugin(resultFunc, detectFirefoxPlugin, getFirefoxDownloader, s_firefox_addonUrl);
+		} else {
+
+			mfdResult.status = 'UNAVAILABLE';
+			try {
+				resultFunc(mfdResult);
+			} catch (err) {
+				throw err;
+			}
+		}
+	}
+
+	function connectToPlugin(resultFunc, detectPluginFunc, getDownloaderFunc, addonUrl) {
+
+		var incmt = 0;
+		var skipCheck = false;
+		// retry detecting extension every 50 ms. once found clear interval
+		var intervalId = setInterval(function() {
+			incmt++;
+
+			detectPluginFunc(function(resultStatus) {
+				if (!skipCheck) {
+					if (resultStatus.status == 'OK') {
+						skipCheck = true;
+						mfdResult.status = 'OK';
+						mfdResult.downloader = getDownloaderFunc();
+						clearInterval(intervalId);
+						try {
+							resultFunc(mfdResult);
+						} catch (err) {
+							throw err;
+						}
+						return;
+					} else if (resultStatus.status == 'NOT_INSTALLED') {
+						mfdResult.status = 'AVAILABLE';
+						mfdResult.addonUrl = addonUrl;
+					} else {
+						mfdResult.status = 'UNAVAILABLE';
+					}
+					if (incmt >= 20) {
+						skipCheck = true;
+						clearInterval(intervalId);
+						try {
+							resultFunc(mfdResult);
+						} catch (err) {
+							throw err;
+						}
+					}
+				}
+			});
+		}, 50);
 	}
 
 	function getChromeDownloader() {
-		var functArray = [];
-		var anchorTagCount = getAnchorTags().length;
+
+		anchorTagCount = getAnchorTags().length;
 
 		// this will initiate to download where objAry will be array of
 		// of anchor tags which user want to download
@@ -59,16 +81,16 @@ var mfd = function() {
 				return;
 			}
 
-			var divtag = document.getElementById("mfd-downloader-initiate-section");
+			var divtag = document.getElementById(s_download_initiate);
 
 			if (divtag != null) {
 				divtag.remove();
 			}
 			var newdiv = document.createElement('div');
-			newdiv.setAttribute('id', 'mfd-downloader-initiate-section');
+			newdiv.setAttribute(s_id, s_download_initiate);
 
-			if(path){
-				newdiv.setAttribute("mfd-downloader-path", path);
+			if (path) {
+				newdiv.setAttribute(s_download_path, path);
 			}
 
 			newdiv.style.position = "absolute";
@@ -77,10 +99,10 @@ var mfd = function() {
 
 			for (var i = 0; i < objAry.length; i++) {
 				if (objAry[i].getAttribute) {
-					var newinpt = document.createElement('input');
-					newinpt.setAttribute('type', 'hidden');
-					newinpt.setAttribute('mfd-downloader-select-href', objAry[i].getAttribute('href'));
-					newinpt.setAttribute('mfd-downloader-select-download', objAry[i].getAttribute('download'));
+					var newinpt = document.createElement(s_input);
+					newinpt.setAttribute(s_type, s_hidden);
+					newinpt.setAttribute(s_download_select_href, objAry[i].getAttribute('href'));
+					newinpt.setAttribute(s_download_select_download, objAry[i].getAttribute('download'));
 					newdiv.appendChild(newinpt);
 				} else
 					throw errMsg;
@@ -94,14 +116,14 @@ var mfd = function() {
 
 			functArray.push(paramFunc);
 
-			var inputTag = document.getElementById("mfd-downloader-watch-id");
+			var inputTag = document.getElementById(s_download_watch_id);
 
 			if (inputTag == null) {
 
-				var newinpt = document.createElement('input');
-				newinpt.setAttribute('type', 'hidden');
-				newinpt.setAttribute('id', 'mfd-downloader-watch-id');
-				newinpt.addEventListener('change', updateWatchResult, false);
+				var newinpt = document.createElement(s_input);
+				newinpt.setAttribute(s_type, s_hidden);
+				newinpt.setAttribute(s_id, s_download_watch_id);
+				newinpt.addEventListener(s_change, updateWatchResult, false);
 
 				document.body.appendChild(newinpt);
 			}
@@ -116,8 +138,7 @@ var mfd = function() {
 	}
 
 	function getFirefoxDownloader() {
-		var functArray = [];
-		var anchorTagCount = getAnchorTags().length;
+		anchorTagCount = getAnchorTags().length;
 
 		// this will initiate to download where objAry will be array of
 		// of anchor tags which user want to download
@@ -130,16 +151,16 @@ var mfd = function() {
 				return;
 			}
 
-			var divtag = document.getElementById("mfd-downloader-initiate-section");
+			var divtag = document.getElementById(s_download_initiate);
 
 			if (divtag != null) {
 				divtag.remove();
 			}
 			var newdiv = document.createElement('div');
-			newdiv.setAttribute('id', 'mfd-downloader-initiate-section');
+			newdiv.setAttribute(s_id, s_download_initiate);
 
-			if(path){
-				newdiv.setAttribute("mfd-downloader-path", path);
+			if (path) {
+				newdiv.setAttribute(s_download_path, path);
 			}
 
 			newdiv.style.position = "absolute";
@@ -148,10 +169,10 @@ var mfd = function() {
 
 			for (var i = 0; i < objAry.length; i++) {
 				if (objAry[i].getAttribute) {
-					var newinpt = document.createElement('input');
-					newinpt.setAttribute('type', 'hidden');
-					newinpt.setAttribute('mfd-downloader-select-href', objAry[i].getAttribute('href'));
-					newinpt.setAttribute('mfd-downloader-select-download', objAry[i].getAttribute('download'));
+					var newinpt = document.createElement(s_input);
+					newinpt.setAttribute(s_type, s_hidden);
+					newinpt.setAttribute(s_download_select_href, objAry[i].getAttribute('href'));
+					newinpt.setAttribute(s_download_select_download, objAry[i].getAttribute('download'));
 					newdiv.appendChild(newinpt);
 				} else
 					throw errMsg;
@@ -165,14 +186,14 @@ var mfd = function() {
 
 			functArray.push(paramFunc);
 
-			var inputTag = document.getElementById("mfd-downloader-watch-id");
+			var inputTag = document.getElementById(s_download_watch_id);
 
 			if (inputTag == null) {
 
-				var newinpt = document.createElement('input');
-				newinpt.setAttribute('type', 'hidden');
-				newinpt.setAttribute('id', 'mfd-downloader-watch-id');
-				newinpt.addEventListener('change', updateWatchResult, false);
+				var newinpt = document.createElement(s_input);
+				newinpt.setAttribute(s_type, s_hidden);
+				newinpt.setAttribute(s_id, s_download_watch_id);
+				newinpt.addEventListener(s_change, updateWatchResult, false);
 
 				document.body.appendChild(newinpt);
 			}
@@ -234,56 +255,48 @@ var mfd = function() {
 				return "Safari";
 			} else
 				return "Other";
-		}
+		} else
+			return "userAgent undefined";
 	}
 
 	function detectChromePlugin(waitFunc) {
 
-		var inputTag = document.getElementById("mfd-downloader-detect-extension-id");
-
-		if (inputTag != null) {
-			inputTag.remove();
-		}
-
-		var newinpt = document.createElement('input');
-		newinpt.setAttribute('type', 'hidden');
-		newinpt.setAttribute('id', 'mfd-downloader-detect-extension-id');
-		newinpt.addEventListener('change', function() {
+		var inputTag = document.getElementById(s_detect_extension_id);
+		var newinpt = document.createElement(s_input);
+		newinpt.setAttribute(s_type, s_hidden);
+		newinpt.setAttribute(s_detect_extension_attr, 'true');
+		newinpt.setAttribute(s_id, s_detect_extension_id);
+		newinpt.addEventListener(s_change, function() {
 			checkForExtension(true)
 		}, false);
 
 		document.body.appendChild(newinpt);
 
-		waitForExtension(waitFunc);
+		waitForExtension(waitFunc, s_detect_extension_attr);
 	}
 
 	function detectFirefoxPlugin(waitFunc) {
 
-		var inputTag = document.getElementById("mfd-downloader-detect-extension-id");
-
-		if (inputTag != null) {
-			inputTag.remove();
-		}
-
-		var newinpt = document.createElement('input');
-		newinpt.setAttribute('type', 'hidden');
-		newinpt.setAttribute('id', 'mfd-downloader-detect-extension-id');
-		newinpt.addEventListener('change', function() {
+		var inputTag = document.getElementById(s_detect_extension_id);
+		var newinpt = document.createElement(s_input);
+		newinpt.setAttribute(s_type, s_hidden);
+		newinpt.setAttribute(s_detect_extension_attr, 'true');
+		newinpt.setAttribute(s_id, s_detect_extension_id);
+		newinpt.addEventListener(s_change, function() {
 			checkForExtension(true)
 		}, false);
 
 		document.body.appendChild(newinpt);
 
-		waitForExtension(waitFunc);
+		waitForExtension(waitFunc, s_detect_extension_attr);
 	}
 
 	function checkForExtension(val) {
 		extensionDetected = val;
 	}
 
-
-	function waitForExtension(waitFunc) {
-
+	function waitForExtension(waitFunc, attributName) {
+		var incmt = 0;
 		var intervalId = setInterval(function() {
 			incmt++;
 			if (extensionDetected || incmt >= 10) {
@@ -308,9 +321,30 @@ var mfd = function() {
 
 				}
 				clearInterval(intervalId);
+				var detectTags = document.querySelectorAll('input[' + attributName + ']');
+				for (var i = 0; i < detectTags.length; i++) {
+					detectTags[i].remove();
+				}
 			}
 		}, 50);
 	}
+
+	// All constant strings
+	var s_detect_extension_id = 'mfd-downloader-detect-extension-id';
+	var s_detect_extension_attr = 'mfd-downloader-detect-extension';
+	var s_download_watch_id = 'mfd-downloader-watch-id';
+	var s_download_initiate = 'mfd-downloader-initiate-section';
+	var s_download_path = 'mfd-downloader-path';
+	var s_download_select_href = 'mfd-downloader-select-href';
+	var s_download_select_download = 'mfd-downloader-select-download';
+	var s_id = 'id';
+	var s_input = 'input';
+	var s_hidden = 'hidden';
+	var s_change = 'change';
+	var s_type = 'type';
+
+	var s_chrome_addonUrl = "http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc";
+	var s_firefox_addonUrl = "https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader/";
 
 	return {
 		attach: attach

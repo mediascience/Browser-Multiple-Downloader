@@ -113,19 +113,21 @@
 			if (this.checked) {
 				//alert('checked');
 				$(this).siblings('a').addClass("active");
-			}
+			}else
+				$(this).siblings('a').removeClass("active");			
 
 		});
 		mfd.attach(function(result) {
 			downloader = result.downloader;
-			downloader.watch(function(array) {
-				alert("We found " + array.length + " anchor tags on this page")
-			});
+			if (downloader) {
+				downloader.watch(function(array) {
+					alert("We found " + array.length + " anchor tags on this page")
+				});
+			}
 
 		});
 
 	});
-
 	function testButtonClick() {
 		downloadFiles();
 	}

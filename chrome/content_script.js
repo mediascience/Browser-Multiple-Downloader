@@ -13,8 +13,8 @@ function init() {
 
 				// Do not check for anchors if removed nodes are related to "downloader-initiate"
 				// These tags are purely used for messaging from the client javascript
-				if(mutation.removedNodes.length && mutation.removedNodes[0].outerHTML && mutation.removedNodes[0].outerHTML.toString().indexOf("mfd-downloader-initiate-section")>-1)
-					doCheck = false;
+				/*if(mutation.removedNodes.length && mutation.removedNodes[0].outerHTML && mutation.removedNodes[0].outerHTML.toString().indexOf("mfd-downloader-initiate-section")>-1)
+					doCheck = false;*/
 			}
 		});
 		//if anchors changed in the page, tell the background

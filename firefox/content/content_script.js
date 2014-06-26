@@ -3,36 +3,54 @@ var MSIDownloader={
 		observer:null,
 		initalized:false,
 		stopped:false,
+		extensionDetected:false,
+		isWatching:false,
 
-		init:function() {
+		init: function() {
 			//console.log("initialize content_script");
 			//only initialize once
-			if(MSIDownloader.initialized) {
+			if (MSIDownloader.initialized) {
 				//already initialized so just restart observing
 				MSIDownloader.startObserving();
 				return;
 			}
-			MSIDownloader.initialized=true;
-			
+			MSIDownloader.initialized = true;
+
 			//page just loaded so check for download anchors, and notify background page
 			MSIDownloader.checkForAnchors();
-
 			//create an observer instance to listen for anchor changes
-			MSIDownloader.observer=new MutationObserver(function(mutations) {
-				var doCheck=false;
+			MSIDownloader.observer = new MutationObserver(function(mutations) {
+				var doCheck = false;
 				mutations.forEach(function(mutation) {
-					if(mutation.addedNodes || mutation.removedNodes) {
-						doCheck=true;
+					if (mutation.addedNodes || mutation.removedNodes) {
+						doCheck = true;
 					}
 				});
 				//if anchors changed in the page, tell the background
-				if(doCheck) {
+				if (doCheck) {
 					MSIDownloader.checkForAnchors();
+
+					// this will detect if extension is installed on the browser either
+					if (!MSIDownloader.extensionDetected) {
+						MSIDownloader.listenForDownloadExtensionDetect();
+					}
+
+					// this will listen for download files when user requests
+					var downloadTask = MSIDownloader.listenForDownloadInitiate();
+
+					// if it is not a download task, listen for changes in anchor tags and respond to use
+					if (!downloadTask)
+						MSIDownloader.listenFordownloadWatch();
 				}
 			});
 
 			//page just loaded so start observing download anchor changes
-			MSIDownloader.observer.observe(document.body,{"childList":true,"attributes":true,"characterData":false,"subtree":true});
+			MSIDownloader.observer.observe(document.body, {
+				"childList": true,
+				"attributes": true,
+				"characterData": false,
+				"subtree": true
+			});
 		},
 
 		startObserving:function() {
@@ -55,7 +73,7 @@ var MSIDownloader={
 		},
 
 		checkForAnchors:function() {
-			//console.log("inject checkForAnchors:"+window.location);
+			//console.log("inject checkForAnchors:"+window.location);			
 			if(MSIDownloader.stopped) {
 				//console.log("inject checkForAnchors stopped");
 				return;
@@ -79,6 +97,98 @@ var MSIDownloader={
 			var event=document.createEvent("HTMLEvents");
 			event.initEvent("MSIDownloader-query",true,false);
 			request.dispatchEvent(event);
-		}
-};
+		},
 
+		listenForDownloadInitiate: function() {
+			//console.log("listen for download");
+			var downloaderInitiateTag = document.querySelector("div[id='mfd-downloader-initiate-section']");
+			
+			// presence of download tag will indicate a call to downloader initiate
+			if (downloaderInitiateTag) {
+				var selected = [];
+
+				// preparing array of href and download attributes
+				var downloaderSelectTags = document.querySelectorAll("input[mfd-downloader-select-href][mfd-downloader-select-download]");
+				var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
+				console.log(downloaderSelectTags);
+				console.log(downloaderSelectTags && downloaderSelectTags.length);
+				if (downloaderSelectTags && downloaderSelectTags.length) {
+
+					var i, selectTag;
+					for (i = 0; i < downloaderSelectTags.length; i++) {
+						selectTag = downloaderSelectTags[i];
+						selected.push({
+							"href": MSIDownloader.absolutePath(selectTag.getAttribute("mfd-downloader-select-href")),
+							"download": MSIDownloader.fileName(selectTag.getAttribute("mfd-downloader-select-download"))
+						});
+					}
+					//console.log ("Makinbg request");
+					//tell background page to initiate multiple download
+					//in this case, path is location where user want to download
+					var request=document.createTextNode(JSON.stringify({"initiateMultileDownload":true, "selected": selected, "path": path}));
+
+					//remove this request after downloader.js responds to it
+					request.addEventListener("MSIDownloader-response",function(event) {
+						//console.log("inject MSIDownloader-response");
+						request.parentNode.removeChild(request);
+					},false);
+
+					//send the request to downloader.js using a custom event
+					document.head.appendChild(request);
+					//console.log("inject MSIDownloader-query");
+					var event=document.createEvent("HTMLEvents");
+					event.initEvent("MSIDownloader-query",true,false);
+					request.dispatchEvent(event);
+				}
+				downloaderInitiateTag.remove();
+				return true;
+			}
+			return false;
+		},
+
+		absolutePath: function(href) {
+			var a=document.createElement("a");
+			a.href=href;
+			return a.href;
+		},
+
+		fileName: function(path) {
+			var i=path.lastIndexOf("/");
+			var j=path.lastIndexOf("\\");
+			i=(i>j?i:j);
+			return (i>-1?path.substr(i+1):path);
+		},
+
+		listenForDownloadExtensionDetect: function() {
+			var etag = document.getElementById('mfd-downloader-detect-extension-id');
+			//console.log ("extension detected");
+			if (etag) {
+				MSIDownloader.respondToInputTag(etag);
+				MSIDownloader.extensionDetected = true;
+			}
+		},
+
+		listenFordownloadWatch: function(){
+			var etag = document.getElementById('mfd-downloader-watch-id');
+			//console.log ("watching for download");
+			if(etag){
+				if(MSIDownloader.isWatching)
+					MSIDownloader.respondToInputTag(etag);
+				else
+					MSIDownloader.isWatching = true;
+			}
+		},
+
+		// this will fire event onchange 
+		respondToInputTag: function(etag) {
+			if (etag.dispatchEvent) {
+				var evt = document.createEvent("HTMLEvents");
+				evt.initEvent("change", false, true);
+				etag.dispatchEvent(evt);
+			} else {
+				etag.fireEvent("onchange");
+			}
+		}
+
+
+};

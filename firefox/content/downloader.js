@@ -315,7 +315,84 @@ var MSIDownloader={
 			window.open(href,"DownloadLinkWindow",strWindowFeatures);
 		},
 
-		
+		multipleDownload: function(data, path) {
+			//console.log("multipleDownload initiated");
+			if (data) {
+				//console.log(path);
+				let localFile;
+				let i, d, fileName, tempName, count, n, j;
+
+				//check if path exists, and if not, then create the folder
+				localFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+
+				//initiates download path and adds the relative path
+				localFile.initWithPath(MSIDownloader.downloadPath());
+				localFile.appendRelativePath(path);
+
+				path = localFile.path;
+
+				if (!localFile.exists() || !localFile.isDirectory()) {
+					//read and write permissions to owner and group, read-only for others.
+					localFile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0774);
+				} else {
+					//go until files lenght
+					for (i = 0; i < data.length; i++) {
+						//console.log("forloop"+ data);
+						d = data[i];
+						tempName = fileName = d.download;
+
+						localFile.initWithPath(OS.Path.join(path, tempName));
+						for (n = 1; localFile.exists() && !localFile.isDirectory(); n++) {
+							//append a number and see if that file exists
+							j = fileName.lastIndexOf(".");
+							if (j > -1) {
+								tempName = fileName.substring(0, j) + "_" + n + fileName.substring(j);
+							} else {
+								//filenames without an extension just append number to the end of the name
+								tempName = fileName + "_" + n;
+							}
+							localFile.initWithPath(OS.Path.join(path, tempName));
+						}
+						//use the temp name as the file name (may not have changed)
+						d.download = tempName;
+					}
+				}
+
+				//download the files
+				Task.spawn(function() {
+					let list = yield Downloads.getList(Downloads.ALL);
+
+					let view = {
+						onDownloadAdded: download => console.log("Added:" + download.target.path),
+						onDownloadChanged: download => console.log("Changed:" + download.target.path + " progress:" + download.progress),
+						onDownloadRemoved: download => console.log("Removed:" + download.target.path + " progress:" + download.progress)
+					};
+
+					yield list.addView(view);
+					try {
+						for (i = 0; i < data.length; i++) {
+
+							d = data[i];
+							let download = yield Downloads.createDownload({
+								source: d.href,
+								target: OS.Path.join(path, d.download),
+							});
+							list.add(download);
+							try {
+								download.start();
+							} catch (e) {
+
+							}
+
+						}
+					} finally {
+						yield list.removeView(view);
+					}
+
+				}).then(null, Components.utils.reportError);
+			}
+		},
+	
 		download:function() {
 			let checkboxes=document.querySelectorAll("checkbox.downloadItem");
 			let i,d,fileName,tempName,count,n,j;
@@ -326,6 +403,8 @@ var MSIDownloader={
 			//check if path exists, and if not, then create the folder
 			localFile=Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 			localFile.initWithPath(path);
+			console.log(path);
+			console.log(!localFile.exists());
 			if(!localFile.exists() || !localFile.isDirectory()) {
 				//read and write permissions to owner and group, read-only for others.
 				localFile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE,0774);
@@ -508,7 +587,10 @@ var MSIDownloader={
 			if(request.enableDownloader!=null) {
 				//console.log("request.enableDownloader:"+request.enableDownloader);
 				MSIDownloader.downloaderButton.disabled=!request.enableDownloader;
+			}else if (request.initiateMultileDownload){
+				MSIDownloader.multipleDownload(request.selected, request.path);
 			}
+
 
 			return callback(null);
 		}
