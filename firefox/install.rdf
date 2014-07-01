@@ -10,8 +10,10 @@
     <em:developer>Ray Engelking</em:developer>
     <em:developer>Tayo Oredola</em:developer>
     <em:contributor>Greg Wiley &lt;aztec.rex@jammm.com&gt;</em:contributor>
+    <em:contributor>Ranjeet Shah &lt;rshah@m23l.com&gt;</em:contributor>
+    <em:contributor>Mark Zipagang &lt;mzipagang@m23l.com&gt;</em:contributor>
     <em:id>{3f1d5914-65d6-4344-985b-2c6c28a40398}</em:id>
-    <em:version>1.1.0</em:version>
+    <em:version>1.2.0</em:version>
     <em:homepageURL>https://github.com/mediascience/Browser-Multiple-Downloader/wiki</em:homepageURL>
     <em:type>2</em:type>
 	<em:iconURL>chrome://downloader/skin/icon_48.png</em:iconURL>
