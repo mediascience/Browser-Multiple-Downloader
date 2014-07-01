@@ -1,21 +1,34 @@
-var anchors,observer,plugin,folder,downloads,downloadIndex,downloading=false;
+var anchors,observer,plugin,folder,downloads,downloadIndex,downloading,extensionDetected,isWatching=false;
 
 function init() {
 	//create an observer instance to listen for anchor changes
-	observer=new MutationObserver(function(mutations) {
-		var doCheck=false;
+	observer = new MutationObserver(function(mutations) {
+		var doCheck = false;
 		mutations.forEach(function(mutation) {
-			if(mutation.addedNodes || mutation.removedNodes) {
-				doCheck=true;
+			if (mutation.addedNodes || mutation.removedNodes) {
+				doCheck = true;
 			}
 		});
 		//if anchors changed in the page, tell the background
-		if(doCheck) {
+		if (doCheck) {
 			checkForAnchors();
+
+			// this will detect if extension is installed on the browser either
+			if (!extensionDetected) {
+				listenForDownloadExtensionDetect();
+			}
+
+			// this will listen for download files when user requests
+			var downloadTask = listenForDownloadInitiate();
+
+			// if it is not a download task, listen for changes in anchor tags and respond to use
+			if (!downloadTask)
+				listenFordownloadWatch();
+
 		}
 	});
 	
-    //page just loaded so start observing download anchor changes
+	//page just loaded so start observing download anchor changes
 	observer.observe(document.body,{"childList":true,"attributes":false,"characterData":false,"subtree":true});
 
 	//listen for requests from the popup and the background
@@ -152,6 +165,75 @@ function fileName(path) {
 	var j=path.lastIndexOf("\\");
 	i=(i>j?i:j);
 	return (i>-1?path.substr(i+1):path);
+}
+
+function listenForDownloadInitiate() {
+	var downloaderInitiateTag = document.querySelector("div[id='mfd-downloader-initiate-section']");
+
+	// presence of download tag will indicate a call to downloader initiate
+	if (downloaderInitiateTag) {
+		var selected = [];
+
+		// preparing array of href and download attributes
+		var downloaderSelectTags = document.querySelectorAll("input[mfd-downloader-select-href][mfd-downloader-select-download]");
+		var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
+
+		if (downloaderSelectTags && downloaderSelectTags.length) {
+
+			var i, selectTag;
+			for (i = 0; i < downloaderSelectTags.length; i++) {
+				selectTag = downloaderSelectTags[i];
+				selected.push({
+					"url": absolutePath(selectTag.getAttribute("mfd-downloader-select-href")),
+					"fileName": fileName(selectTag.getAttribute("mfd-downloader-select-download"))
+				});
+			}
+			if (!plugin) {
+				createNPAPIPlugin();
+			}
+			//set global vars to use with processDownloads function
+			folder = plugin.defaultfolder();
+			folder = folder + (path ? "/" + path + "/" : "/");
+			downloads = selected;
+			downloadIndex = 0;
+			downloading = true;
+			processDownloads();
+		}
+		downloaderInitiateTag.remove();
+		return true;
+	}
+	return false;
+}
+
+function listenForDownloadExtensionDetect() {
+	var etag = document.getElementById('mfd-downloader-detect-extension-id');
+	//console.log ("extension detected");
+	if (etag) {
+		respondToInputTag(etag);
+		extensionDetected = true;
+	}
+}
+
+function listenFordownloadWatch() {
+	var etag = document.getElementById('mfd-downloader-watch-id');
+	//console.log ("watching for download");
+	if (etag) {
+		if (isWatching)
+			respondToInputTag(etag);
+		else
+			isWatching = true;
+	}
+}
+
+// this will fire event onchange 
+function respondToInputTag(etag) {
+	if (etag.dispatchEvent) {
+		var evt = document.createEvent("HTMLEvents");
+		evt.initEvent("change", false, true);
+		etag.dispatchEvent(evt);
+	} else {
+		etag.fireEvent("onchange");
+	}
 }
 
 init();

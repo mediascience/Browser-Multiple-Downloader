@@ -11,9 +11,11 @@ var mfd = function() {
 
 
 		if (browser == 'Chrome') {
-			connectToPlugin(resultFunc, detectChromePlugin, getChromeDownloader, s_chrome_addonUrl);
+			connectToPlugin(resultFunc, s_chrome_addonUrl);
 		} else if (browser == 'Firefox') {
-			connectToPlugin(resultFunc, detectFirefoxPlugin, getFirefoxDownloader, s_firefox_addonUrl);
+			connectToPlugin(resultFunc, s_firefox_addonUrl);
+		} else if (browser == 'Safari') {
+			connectToPlugin(resultFunc, s_safari_addonUrl);
 		} else {
 
 			mfdResult.status = 'UNAVAILABLE';
@@ -25,7 +27,7 @@ var mfd = function() {
 		}
 	}
 
-	function connectToPlugin(resultFunc, detectPluginFunc, getDownloaderFunc, addonUrl) {
+	function connectToPlugin(resultFunc, addonUrl) {
 
 		var incmt = 0;
 		var skipCheck = false;
@@ -33,12 +35,12 @@ var mfd = function() {
 		var intervalId = setInterval(function() {
 			incmt++;
 
-			detectPluginFunc(function(resultStatus) {
+			detectPlugin(function(resultStatus) {
 				if (!skipCheck) {
 					if (resultStatus.status == 'OK') {
 						skipCheck = true;
 						mfdResult.status = 'OK';
-						mfdResult.downloader = getDownloaderFunc();
+						mfdResult.downloader = getDownloader();
 						clearInterval(intervalId);
 						try {
 							resultFunc(mfdResult);
@@ -52,7 +54,7 @@ var mfd = function() {
 					} else {
 						mfdResult.status = 'UNAVAILABLE';
 					}
-					if (incmt >= 20) {
+					if (incmt >= 100) {
 						skipCheck = true;
 						clearInterval(intervalId);
 						try {
@@ -66,8 +68,7 @@ var mfd = function() {
 		}, 50);
 	}
 
-	function getChromeDownloader() {
-
+	function getDownloader() {
 		anchorTagCount = getAnchorTags().length;
 
 		// this will initiate to download where objAry will be array of
@@ -135,77 +136,7 @@ var mfd = function() {
 			getAnchorTags: getAnchorTags
 		};
 
-	}
-
-	function getFirefoxDownloader() {
-		anchorTagCount = getAnchorTags().length;
-
-		// this will initiate to download where objAry will be array of
-		// of anchor tags which user want to download
-		// path is optional and will be relative to the default Downloads folder
-		var initiate = function(objAry, path) {
-
-			var errMsg = "initiate() expects collection of anchor elements";
-
-			if (!objAry.length) {
-				return;
-			}
-
-			var divtag = document.getElementById(s_download_initiate);
-
-			if (divtag != null) {
-				divtag.remove();
-			}
-			var newdiv = document.createElement('div');
-			newdiv.setAttribute(s_id, s_download_initiate);
-
-			if (path) {
-				newdiv.setAttribute(s_download_path, path);
-			}
-
-			newdiv.style.position = "absolute";
-			newdiv.style.left = 0;
-			newdiv.style.top = 0;
-
-			for (var i = 0; i < objAry.length; i++) {
-				if (objAry[i].getAttribute) {
-					var newinpt = document.createElement(s_input);
-					newinpt.setAttribute(s_type, s_hidden);
-					newinpt.setAttribute(s_download_select_href, objAry[i].getAttribute('href'));
-					newinpt.setAttribute(s_download_select_download, objAry[i].getAttribute('download'));
-					newdiv.appendChild(newinpt);
-				} else
-					throw errMsg;
-			}
-			document.body.appendChild(newdiv);
-		}
-
-		// this will insert watch hidden tag in dom if user wish to watch and 
-		// will return array of all elements those are anchor tags with href and download
-		var watch = function(paramFunc) {
-
-			functArray.push(paramFunc);
-
-			var inputTag = document.getElementById(s_download_watch_id);
-
-			if (inputTag == null) {
-
-				var newinpt = document.createElement(s_input);
-				newinpt.setAttribute(s_type, s_hidden);
-				newinpt.setAttribute(s_id, s_download_watch_id);
-				newinpt.addEventListener(s_change, updateWatchResult, false);
-
-				document.body.appendChild(newinpt);
-			}
-		}
-
-		return {
-			initiate: initiate,
-			watch: watch,
-			getAnchorTags: getAnchorTags
-		};
-
-	}
+	}	
 
 	// get executed when content_script triggers onchange event
 	// and this returns list of anchor tags into a funtion
@@ -259,7 +190,7 @@ var mfd = function() {
 			return "userAgent undefined";
 	}
 
-	function detectChromePlugin(waitFunc) {
+	function detectPlugin(waitFunc) {
 
 		var inputTag = document.getElementById(s_detect_extension_id);
 		var newinpt = document.createElement(s_input);
@@ -273,23 +204,7 @@ var mfd = function() {
 		document.body.appendChild(newinpt);
 
 		waitForExtension(waitFunc, s_detect_extension_attr);
-	}
-
-	function detectFirefoxPlugin(waitFunc) {
-
-		var inputTag = document.getElementById(s_detect_extension_id);
-		var newinpt = document.createElement(s_input);
-		newinpt.setAttribute(s_type, s_hidden);
-		newinpt.setAttribute(s_detect_extension_attr, 'true');
-		newinpt.setAttribute(s_id, s_detect_extension_id);
-		newinpt.addEventListener(s_change, function() {
-			checkForExtension(true)
-		}, false);
-
-		document.body.appendChild(newinpt);
-
-		waitForExtension(waitFunc, s_detect_extension_attr);
-	}
+	}	
 
 	function checkForExtension(val) {
 		extensionDetected = val;
@@ -345,6 +260,7 @@ var mfd = function() {
 
 	var s_chrome_addonUrl = "http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc";
 	var s_firefox_addonUrl = "https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader/";
+	var s_safari_addonUrl = "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/safari-extension/MSIDownloader.safariextz";
 
 	return {
 		attach: attach
