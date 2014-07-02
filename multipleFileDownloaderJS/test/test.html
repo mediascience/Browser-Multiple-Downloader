@@ -77,8 +77,29 @@ Test MultipleFileDownloaderJS API
 			} 
 			else if (navigator.userAgent.indexOf("Safari") > 0) {
 				assertTrue(result != undefined, "mfd.attach returns a result object");
-				assertEquals(result.status, "UNAVAILABLE", "MultipleFileDownloaderJS for Safari unavailable");
-				assertEquals(result.downloader, undefined, "Browser extension for Safari unavailable");
+				assertEquals(result.status, "OK", "MultipleFileDownloaderJS for Safari available");
+				assertTrue(result.downloader != undefined, "Browser extension for Safari available");
+
+				var downloader = result.downloader;
+				
+				if(downloader){
+					// test watch
+					downloader.watch(function(elements){
+						assertTrue(elements.length == 1, "mfd.watch has detected one new link");
+					});
+
+					setTimeout(function(){
+						// trigger watch event by posting new link
+						$("#container").append('<a href="https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/test-landing-2/media/Anchors_Aweigh.mp3" download="02_Anchors Aweigh.mp3">Test Link</a>';
+
+						// test download
+						downloader.initiate($("a[href][download]"));
+					}, 10);
+				}
+				else{
+					console.log(result.addonUrl);
+					$("#container").append('<a href="'+result.addonUrl+'">Please download the plugin here</a>');
+				}
 			} 
 			else{
 				assertTrue(result != undefined, "mfd.attach returns a result object");

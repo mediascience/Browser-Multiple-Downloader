@@ -20,10 +20,17 @@ MultipleFileDownloaderJS is a library that interfaces with our multiple-file dow
 
 2. Initiate download
 	
-	// pass in a collection of downloadable anchors and an optional path (relative to the default Downloads folder)
-	downloader.initiate(anchorElements, path);
+	// pass in a collection of downloadable anchors and an optional path (path paramter only works for Firefox and Chrome, and it is relative to the default Downloads folder)
+	downloader.initiate(anchorElements, [path]);
 
-3. Detect Downloadable Content
+3. Select download folder (only for Safari)
+	
+	// calling selectFolder will open up a file dialog in Safari, with the selected path being passed back to the callback
+	downloader.selectFolder(function(selectedFolderPath){
+		showDownloadFolderPath(selectedFolderPath);
+	});
+
+4. Detect Downloadable Content
 
 	downloader.watch(function (anchorElements) {
 	    if (anchorElements.length > 1) {
