@@ -1,4 +1,4 @@
-var anchors,observer,plugin,folder,downloads,downloadIndex,downloading,extensionDetected,isWatching=false;
+var anchors,observer,plugin,folder,downloads,downloadIndex,downloading,extensionDetected,isWatching=false,selectedFolder;
 
 function init() {
 	//create an observer instance to listen for anchor changes
@@ -23,8 +23,9 @@ function init() {
 
 			// if it is not a download task, listen for changes in anchor tags and respond to use
 			if (!downloadTask)
-				listenFordownloadWatch();
+				listenForDownloadWatch();
 
+			listenForFolderChange();
 		}
 	});
 	
@@ -116,6 +117,7 @@ function processDownloads() {
 		console.log("downloads complete!");
 		safari.self.tab.dispatchMessage("downloadsComplete",null);
 		downloading=false;
+		folder = null; // reset folder
 	}
 }
 
@@ -176,7 +178,7 @@ function listenForDownloadInitiate() {
 
 		// preparing array of href and download attributes
 		var downloaderSelectTags = document.querySelectorAll("input[mfd-downloader-select-href][mfd-downloader-select-download]");
-		var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
+		// var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
 
 		if (downloaderSelectTags && downloaderSelectTags.length) {
 
@@ -191,9 +193,9 @@ function listenForDownloadInitiate() {
 			if (!plugin) {
 				createNPAPIPlugin();
 			}
+			
 			//set global vars to use with processDownloads function
-			folder = plugin.defaultfolder();
-			folder = folder + (path ? "/" + path + "/" : "/");
+			folder = selectedFolder || plugin.defaultfolder();
 			downloads = selected;
 			downloadIndex = 0;
 			downloading = true;
@@ -205,6 +207,20 @@ function listenForDownloadInitiate() {
 	return false;
 }
 
+function listenForFolderChange(){
+	var etag = document.getElementById('mfd-downloader-select-folder-id');
+	//console.log ("watching for select folder");
+	if (etag) {
+		if (!plugin) {
+			createNPAPIPlugin();
+		}
+		if(selectedFolder = plugin.folder()){
+			etag.setAttribute('mfd-downloader-path', selectedFolder);
+			respondToInputTag(etag);
+		}
+	}
+}
+
 function listenForDownloadExtensionDetect() {
 	var etag = document.getElementById('mfd-downloader-detect-extension-id');
 	//console.log ("extension detected");
@@ -214,7 +230,7 @@ function listenForDownloadExtensionDetect() {
 	}
 }
 
-function listenFordownloadWatch() {
+function listenForDownloadWatch() {
 	var etag = document.getElementById('mfd-downloader-watch-id');
 	//console.log ("watching for download");
 	if (etag) {
