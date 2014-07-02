@@ -4,6 +4,7 @@ var mfd = function() {
 	var anchorTagCount;
 	var functArray = [];
 	var mfdResult = {};
+	var funcSlectFolder;
 
 	var attach = function(resultFunc) {
 
@@ -11,11 +12,11 @@ var mfd = function() {
 
 
 		if (browser == 'Chrome') {
-			connectToPlugin(resultFunc, s_chrome_addonUrl);
+			connectToPlugin(resultFunc, s_chrome_addonUrl, browser);
 		} else if (browser == 'Firefox') {
-			connectToPlugin(resultFunc, s_firefox_addonUrl);
+			connectToPlugin(resultFunc, s_firefox_addonUrl, browser);
 		} else if (browser == 'Safari') {
-			connectToPlugin(resultFunc, s_safari_addonUrl);
+			connectToPlugin(resultFunc, s_safari_addonUrl, browser);
 		} else {
 
 			mfdResult.status = 'UNAVAILABLE';
@@ -27,7 +28,7 @@ var mfd = function() {
 		}
 	}
 
-	function connectToPlugin(resultFunc, addonUrl) {
+	function connectToPlugin(resultFunc, addonUrl, detectedBrowser) {
 
 		var incmt = 0;
 		var skipCheck = false;
@@ -40,7 +41,11 @@ var mfd = function() {
 					if (resultStatus.status == 'OK') {
 						skipCheck = true;
 						mfdResult.status = 'OK';
+						mfdResult.browser = detectedBrowser;
 						mfdResult.downloader = getDownloader();
+						if (detectedBrowser == 'Safari'){
+							mfdResult.downloader.selectFolder = selectFolderPath;
+						}
 						clearInterval(intervalId);
 						try {
 							resultFunc(mfdResult);
@@ -159,6 +164,40 @@ var mfd = function() {
 		}
 	}
 
+
+	// when user calls selectFolder method, insert a input tag
+	// so that content_script can notice for this request
+	function selectFolderPath(paramFunc) {
+
+		funcSlectFolder = paramFunc;
+		var inputTag = document.getElementById(s_download_select_folder_id);
+
+		if (inputTag != null)
+			inputTag.remove();
+
+		var newinpt = document.createElement(s_input);
+		newinpt.setAttribute(s_type, s_hidden);
+		newinpt.setAttribute(s_id, s_download_select_folder_id);
+		newinpt.addEventListener(s_change, returnFolderPath, false);
+
+		document.body.appendChild(newinpt);
+
+	}
+
+	// retuns a selected safari folder path if user has selected else return null
+	function returnFolderPath() {
+
+		var inputTag = document.getElementById(s_download_select_folder_id);
+
+		if (inputTag != null) {
+			var pathVal = inputTag.getAttribute(s_download_path);
+
+			if (pathVal)
+				funcSlectFolder(pathVal);
+			inputTag.remove();
+		}
+	}
+
 	// gets all anchor tags and prepare array
 	function getAnchorTags() {
 
@@ -252,6 +291,7 @@ var mfd = function() {
 	var s_download_path = 'mfd-downloader-path';
 	var s_download_select_href = 'mfd-downloader-select-href';
 	var s_download_select_download = 'mfd-downloader-select-download';
+	var s_download_select_folder_id = 'mfd-downloader-select-folder-id';
 	var s_id = 'id';
 	var s_input = 'input';
 	var s_hidden = 'hidden';
