@@ -108,6 +108,7 @@
 	<script>
 
 	var downloader;
+	var browser;
 
 	$(document).ready(function() {
 
@@ -122,6 +123,7 @@
 		});
 		mfd.attach(function(result) {
 			downloader = result.downloader;
+			browser = result.browser;
 			if (downloader) {
 				downloader.watch(function(array) {
 					alert("We found " + array.length + " anchor tags on this page")
@@ -150,8 +152,12 @@
 		}
 	}
 
+	// In case of Safari browser, user is not allowed to pass download path without
+	// creating that folder so it is required to call selectFolder method just to 
+	// pop folder selection window and collets selected path as callback
 	function slectSafariFolder() {
-		if (downloader) {
+		if (downloader && browser == 'Safari') {
+
 			downloader.selectFolder(function(path) {
 				alert(path);
 			});
