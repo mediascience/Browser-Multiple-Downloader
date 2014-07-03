@@ -110,8 +110,6 @@ var MSIDownloader={
 				// preparing array of href and download attributes
 				var downloaderSelectTags = document.querySelectorAll("input[mfd-downloader-select-href][mfd-downloader-select-download]");
 				var path = downloaderInitiateTag.getAttribute("mfd-downloader-path");
-				console.log(downloaderSelectTags);
-				console.log(downloaderSelectTags && downloaderSelectTags.length);
 				if (downloaderSelectTags && downloaderSelectTags.length) {
 
 					var i, selectTag;

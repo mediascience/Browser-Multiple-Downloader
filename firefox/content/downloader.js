@@ -249,7 +249,8 @@ var MSIDownloader={
 			anchors=window.content.document.querySelectorAll("a[href][download]");
 			
 			//enable the button if download anchors are found
-			MSIDownloader.downloaderButton.disabled=(anchors.length==0);
+			if(MSIDownloader.downloaderButton)
+				MSIDownloader.downloaderButton.disabled=(anchors.length==0);
 		},
 		
 		pageLoaded:function(event) {
@@ -282,7 +283,8 @@ var MSIDownloader={
 				//console.log("tab was deselected! href:"+href);
 				
 				let jso=contentDoc.defaultView.wrappedJSObject;
-				jso.MSIDownloader.stopObserving();
+				if(jso.MSIDownloader)
+					jso.MSIDownloader.stopObserving();
 
 			};
 		},
@@ -363,9 +365,9 @@ var MSIDownloader={
 					let list = yield Downloads.getList(Downloads.ALL);
 
 					let view = {
-						onDownloadAdded: download => console.log("Added:" + download.target.path),
-						onDownloadChanged: download => console.log("Changed:" + download.target.path + " progress:" + download.progress),
-						onDownloadRemoved: download => console.log("Removed:" + download.target.path + " progress:" + download.progress)
+						onDownloadAdded: download => undefined, //console.log("Added:" + download.target.path),
+						onDownloadChanged: download => undefined, //console.log("Changed:" + download.target.path + " progress:" + download.progress),
+						onDownloadRemoved: download => undefined //console.log("Removed:" + download.target.path + " progress:" + download.progress)
 					};
 
 					yield list.addView(view);
@@ -403,8 +405,8 @@ var MSIDownloader={
 			//check if path exists, and if not, then create the folder
 			localFile=Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 			localFile.initWithPath(path);
-			console.log(path);
-			console.log(!localFile.exists());
+			// console.log(path);
+			// console.log(!localFile.exists());
 			if(!localFile.exists() || !localFile.isDirectory()) {
 				//read and write permissions to owner and group, read-only for others.
 				localFile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE,0774);
@@ -448,9 +450,9 @@ var MSIDownloader={
 				let list=yield Downloads.getList(Downloads.ALL);
 
 				let view={
-						onDownloadAdded: download => console.log("Added:"+download.target.path),
-						onDownloadChanged: download => console.log("Changed:"+download.target.path+" progress:"+download.progress),
-						onDownloadRemoved: download => console.log("Removed:"+download.target.path+" progress:"+download.progress)
+						onDownloadAdded: download => undefined, //console.log("Added:"+download.target.path),
+						onDownloadChanged: download => undefined, //console.log("Changed:"+download.target.path+" progress:"+download.progress),
+						onDownloadRemoved: download => undefined //console.log("Removed:"+download.target.path+" progress:"+download.progress)
 				};
 
 				yield list.addView(view);
@@ -545,7 +547,8 @@ var MSIDownloader={
 				let script=top.window.content.document.createElement("script");
 				script.type="text/javascript";
 				script.setAttribute("src","chrome://downloader/content/content_script.js");
-				top.window.content.document.getElementsByTagName("head")[0].appendChild(script);
+				if(top.window.content.document.getElementsByTagName("head")[0])
+					top.window.content.document.getElementsByTagName("head")[0].appendChild(script);
 				//console.log("wait for injection 0");
 				setTimeout(function() {MSIDownloader.waitForInjection(jso,1);},100);
 			} else {
@@ -586,7 +589,8 @@ var MSIDownloader={
 		callback:function(request,sender,callback) {
 			if(request.enableDownloader!=null) {
 				//console.log("request.enableDownloader:"+request.enableDownloader);
-				MSIDownloader.downloaderButton.disabled=!request.enableDownloader;
+				if(MSIDownloader.downloaderButton)
+					MSIDownloader.downloaderButton.disabled=!request.enableDownloader;
 			}else if (request.initiateMultileDownload){
 				MSIDownloader.multipleDownload(request.selected, request.path);
 			}
