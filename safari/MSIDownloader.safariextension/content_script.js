@@ -216,8 +216,10 @@ function listenForFolderChange(){
 		}
 		if(selectedFolder = plugin.folder()){
 			etag.setAttribute('mfd-downloader-path', selectedFolder);
-			respondToInputTag(etag);
+		}else{
+			etag.setAttribute('mfd-downloader-path', '');			
 		}
+		respondToInputTag(etag);
 	}
 }
 
