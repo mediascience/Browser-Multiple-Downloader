@@ -603,4 +603,3 @@ var MSIDownloader={
 //overlay events
 window.addEventListener("load",MSIDownloader.init,false);
 window.addEventListener("unload",MSIDownloader.destroy,false);
-

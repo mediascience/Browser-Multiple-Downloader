@@ -13,8 +13,8 @@ function init() {
 
 				// Do not check for anchors if removed nodes are related to "downloader-initiate"
 				// These tags are purely used for messaging from the client javascript
-				/*if(mutation.removedNodes.length && mutation.removedNodes[0].outerHTML && mutation.removedNodes[0].outerHTML.toString().indexOf("mfd-downloader-initiate-section")>-1)
-					doCheck = false;*/
+				if(mutation.removedNodes.length && mutation.removedNodes[0].outerHTML && mutation.removedNodes[0].outerHTML.toString().indexOf("mfd-downloader-initiate-section")>-1)
+					doCheck = false;
 			}
 		});
 		//if anchors changed in the page, tell the background
@@ -149,7 +149,11 @@ function checkForAnchors() {
 	
 	//tell background page to show or hide the page action icon
 	//in a dynamic page, downloads may have disappeared or appeared 
-	chrome.runtime.sendMessage({"showPageAction":anchors.length>0});	
+	for (var i = 0; i < anchors.length; i++) {
+		if (anchors[i].style.display !== 'none') {
+			chrome.runtime.sendMessage({"showPageAction":anchors.length>0});	
+		}
+	}
 }
 
 function updateData() {
