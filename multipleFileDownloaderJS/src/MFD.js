@@ -300,7 +300,7 @@ var mfd = function() {
 
 	var s_chrome_addonUrl = "http://chrome.google.com/webstore/detail/multiple-file-downloader/ijodceacahodmjmdmfcobdepogaajbpc";
 	var s_firefox_addonUrl = "https://addons.mozilla.org/en-US/firefox/addon/multiple-file-downloader/";
-	var s_safari_addonUrl = "https://s3-us-west-1.amazonaws.com/com-msiops-dev-bucket1/safari-extension/MSIDownloader.safariextz";
+	var s_safari_addonUrl = "https://d2w5u6kh8b1gme.cloudfront.net/safari-extension/MSI-Multiple-File-Downloader.pkg";
 
 	return {
 		attach: attach
