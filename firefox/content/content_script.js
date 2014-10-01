@@ -7,7 +7,6 @@ var MSIDownloader={
 		isWatching:false,
 
 		init: function() {
-			//console.log("initialize content_script");
 			//only initialize once
 			if (MSIDownloader.initialized) {
 				//already initialized so just restart observing
@@ -56,7 +55,6 @@ var MSIDownloader={
 		startObserving:function() {
 			MSIDownloader.stopped=false;
 			
-			//console.log("inject startObserving:"+window.location);
 			//background page is saying that this is the active page
 			//so check the anchors immediately, and start observing changes for this page
 			MSIDownloader.checkForAnchors();
@@ -64,18 +62,14 @@ var MSIDownloader={
 		},
 
 		stopObserving:function() {
-			//console.log("inject stopObserving:"+window.location);
 			//background page is saying that another page is the active page
 			//so stop observing changes for this page
 			MSIDownloader.observer.disconnect;
-			//console.log("inject stopped observing:"+window.location);
 			MSIDownloader.stopped=true;
 		},
 
-		checkForAnchors:function() {
-			//console.log("inject checkForAnchors:"+window.location);			
+		checkForAnchors:function() {		
 			if(MSIDownloader.stopped) {
-				//console.log("inject checkForAnchors stopped");
 				return;
 			}
 			//get all anchors that have an href and a download tag
@@ -93,20 +87,17 @@ var MSIDownloader={
 			
 			//remove this request after downloader.js responds to it
 			request.addEventListener("MSIDownloader-response",function(event) {
-				//console.log("inject MSIDownloader-response");
 				request.parentNode.removeChild(request);
 			},false);
 
 			//send the request to downloader.js using a custom event
 			document.head.appendChild(request);
-			//console.log("inject MSIDownloader-query");
 			var event=document.createEvent("HTMLEvents");
 			event.initEvent("MSIDownloader-query",true,false);
 			request.dispatchEvent(event);
 		},
 
 		listenForDownloadInitiate: function() {
-			//console.log("listen for download");
 			var downloaderInitiateTag = document.querySelector("div[id='mfd-downloader-initiate-section']");
 			
 			// presence of download tag will indicate a call to downloader initiate
@@ -126,20 +117,17 @@ var MSIDownloader={
 							"download": MSIDownloader.fileName(selectTag.getAttribute("mfd-downloader-select-download"))
 						});
 					}
-					//console.log ("Makinbg request");
 					//tell background page to initiate multiple download
 					//in this case, path is location where user want to download
 					var request=document.createTextNode(JSON.stringify({"initiateMultileDownload":true, "selected": selected, "path": path}));
 
 					//remove this request after downloader.js responds to it
 					request.addEventListener("MSIDownloader-response",function(event) {
-						//console.log("inject MSIDownloader-response");
 						request.parentNode.removeChild(request);
 					},false);
 
 					//send the request to downloader.js using a custom event
 					document.head.appendChild(request);
-					//console.log("inject MSIDownloader-query");
 					var event=document.createEvent("HTMLEvents");
 					event.initEvent("MSIDownloader-query",true,false);
 					request.dispatchEvent(event);
@@ -165,7 +153,7 @@ var MSIDownloader={
 
 		listenForDownloadExtensionDetect: function() {
 			var etag = document.getElementById('mfd-downloader-detect-extension-id');
-			//console.log ("extension detected");
+
 			if (etag) {
 				MSIDownloader.respondToInputTag(etag);
 				MSIDownloader.extensionDetected = true;
@@ -174,7 +162,7 @@ var MSIDownloader={
 
 		listenFordownloadWatch: function(){
 			var etag = document.getElementById('mfd-downloader-watch-id');
-			//console.log ("watching for download");
+
 			if(etag){
 				if(MSIDownloader.isWatching)
 					MSIDownloader.respondToInputTag(etag);
