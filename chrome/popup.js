@@ -13,7 +13,7 @@ function init() {
 
 	//initialize button that downloads the selected files
 	btnDownload=document.getElementById("btnDownload");
-	btnDownload.addEventListener("click",download);
+	btnDownload.addEventListener("click", backgroudDownload);
 
 	//initialize button that allows changing/restoring the path
 	btnChange=document.getElementById("btnChange");
@@ -189,6 +189,34 @@ function download() {
 		};
 	}
 	
+
+}
+
+function backgroudDownload(){	
+
+	chrome.tabs.query({"active":true,"currentWindow":true},function(tabs) {
+
+		var inputs=table.querySelectorAll("input");
+		var i,d,count;
+		var path=localStorage["path"];
+		var selectedData = [];
+
+		//count total files to be downloaded
+		for(i=count=0;i<inputs.length;i++) {
+			if(inputs[i].checked) count++;
+		}
+		for(i=0;i<inputs.length;i++) {
+			if(inputs[i].checked) {
+				d=data[i];
+				selectedData.push({
+					href:d.href,
+					download:d.download
+				});
+			}
+		}
+		chrome.tabs.sendMessage(tabs[0].id,{popupDownloadInitiate:true, popupDownloadData:selectedData, popupDownloadPath:path});
+		window.close();
+	});
 
 }
 

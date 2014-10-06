@@ -23,6 +23,10 @@ function init() {
 				if(request.selected && request.selected.length)
 					downloadInitiate(request.selected, request.path);
 			}
+			else if(request.popupDownloadInitiate){
+				if(request.popupData && request.popupData.length)
+					popupDownloadInitiate(request.popupData, request.popupPath);
+			}
 			else if(request.executeScript){
 				// passing in the script to be executed
 				if(request.script)
@@ -90,6 +94,23 @@ function downloadInitiate(data, path){
 			d=data[i];
 			chrome.downloads.download({"url":d.href,"filename":path+d.download,"conflictAction":"uniquify"}, function(downloadId) {
 		
+			});
+		}
+	}
+}
+
+function popupDownloadInitiate(data, path){
+	
+	if(data){
+		
+		var dd;
+		//add the slash to the end of the path if it exists
+		path = (path == undefined ? "" : (path.endsWith('/') ? path : path + "/"));
+
+		for(i=0;i<data.length;i++) {
+			//save this file
+			dd=data[i];
+			chrome.downloads.download({"url":dd.href,"filename":path+dd.download,"conflictAction":"uniquify"}, function(downloadId) {
 			});
 		}
 	}

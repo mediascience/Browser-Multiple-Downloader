@@ -3,7 +3,6 @@ var anchors, observer, isWatching = false, extensionDetected = false;
 function init() {
 	//page just loaded so check for download anchors, and notify background page
 	setTimeout(checkForAnchors, 500);
-
 	//create an observer instance to listen for anchor changes
 	observer=new MutationObserver(function(mutations) {
 		var doCheck=false;
@@ -45,6 +44,9 @@ function init() {
 			//send the file download data to the popup
 			sendResponse({"data":updateData()});
 		
+		}
+		else if(request.popupDownloadInitiate){
+			chrome.runtime.sendMessage({popupDownloadInitiate:true, popupData:request.popupDownloadData, popupPath:request.popupDownloadPath});
 		}
 		else if(request.observeDownloads) {
 
