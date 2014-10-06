@@ -134,13 +134,7 @@ function checkForAnchors() {
 	
 	//tell background page to show or hide the page action icon
 	//in a dynamic page, downloads may have disappeared or appeared
-	for (var i = 0; i < anchors.length; i++) {
-		if (anchors[i].style.display !== 'none') {
-			safari.self.tab.dispatchMessage("anchorCheckResults",anchors.length==0);
-		} else {
-			safari.self.tab.dispatchMessage("anchorCheckResults",true);
-		}
-	}
+	safari.self.tab.dispatchMessage("anchorCheckResults",anchors.length==0);
 }
 
 function updateData() {

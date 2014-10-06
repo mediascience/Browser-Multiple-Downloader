@@ -151,11 +151,7 @@ function checkForAnchors() {
 	
 	//tell background page to show or hide the page action icon
 	//in a dynamic page, downloads may have disappeared or appeared 
-	for (var i = 0; i < anchors.length; i++) {
-		if (anchors[i].style.display !== 'none') {
 			chrome.runtime.sendMessage({"showPageAction":anchors.length>0});	
-		}
-	}
 }
 
 function updateData() {

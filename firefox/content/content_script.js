@@ -77,14 +77,7 @@ var MSIDownloader={
 
 			//tell background page to show or hide the page action icon
 			//in a dynamic page, downloads may have disappeared or appeared 
-			for (var i = 0; i < MSIDownloader.anchors.length; i++) {
-				if (MSIDownloader.anchors[i].style.display !== 'none') {
-					var request=document.createTextNode(JSON.stringify({"enableDownloader":MSIDownloader.anchors.length>0}));	
-				} else {
-					var request=document.createTextNode(JSON.stringify({"enableDownloader":MSIDownloader.anchors.length==0}));	
-				}
-			}
-			
+			var request=document.createTextNode(JSON.stringify({"enableDownloader":MSIDownloader.anchors.length>0}));	
 			//remove this request after downloader.js responds to it
 			request.addEventListener("MSIDownloader-response",function(event) {
 				request.parentNode.removeChild(request);
