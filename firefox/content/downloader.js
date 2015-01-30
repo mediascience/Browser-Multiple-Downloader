@@ -11,7 +11,6 @@ var MSIDownloader={
 		data:null,
 		panel:null,
 		jso:null,
-
 		init:function() {
 			//remove the window onload as it is not needed anymore
 			window.removeEventListener("load",MSIDownloader.init,false);
@@ -302,8 +301,8 @@ var MSIDownloader={
 			return (i>-1?path.substr(i+1):path);
 		},
 		
-		openInBrowser:function(href) {
-			let href=this.value;
+		openInBrowser:function(path) {
+			let href=path;
 			let strWindowFeatures="toolbar=yes,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
 			window.open(href,"DownloadLinkWindow",strWindowFeatures);
 		},
